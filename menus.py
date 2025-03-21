@@ -35,14 +35,54 @@ def airline_management_menu():
         
         if choice == "1":
             logging.info("Adding an airline.")
-            # Placeholder for adding pilot logic
+            # Placeholder for adding airline logic
         elif choice == "2":
             logging.info("Viewing all airlines.")
-            # Placeholder for viewing pilots logic
+            pilot.show_airlines()
         elif choice == "3":
             break
         else:
             print("Invalid choice. Please try again.")
+
+def airplane_management_menu():
+    while True:
+        print("\n=== Airplane Management Menu ===")
+        print("1. Add Airplane")
+        print("2. View Airplanes")
+        print("3. Back to Main Menu")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == "1":
+            logging.info("Adding an airplane.")
+            # Placeholder for adding airline logic
+        elif choice == "2":
+            logging.info("Viewing all airplanes.")
+            pilot.show_airplanes()
+        elif choice == "3":
+            break
+        else:
+            print("Invalid choice. Please try again.")            
+
+def destination_management_menu():
+    while True:
+        print("\n=== Destination Management Menu ===")
+        print("1. Add Destination")
+        print("2. View Destinations")
+        print("3. Back to Main Menu")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == "1":
+            logging.info("Adding an destination.")
+            # Placeholder for adding destination logic
+        elif choice == "2":
+            logging.info("Viewing all destinations.")
+            pilot.show_destinations()
+        elif choice == "3":
+            break
+        else:
+            print("Invalid choice. Please try again.")                
 
 def flight_management_menu():
     while True:

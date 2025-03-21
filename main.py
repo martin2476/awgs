@@ -19,29 +19,7 @@ logging.basicConfig(
 # logging.critical("This is a CRITICAL message.")
 
 
-def show_planes():
-    logging.info("show_planes started.")
-    conn = sqlite3.connect('awgsstore')
-    now = datetime.datetime.now()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Plane")
-    rows = cursor.fetchall()
-    for row in rows:
-        print (row)
-    logging.info("show_planes completed.")
-    
 
-
-def show_destinations():
-    logging.info("show_destinations started.")
-    conn = sqlite3.connect('awgsstore')
-    now = datetime.datetime.now()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Destination")
-    rows = cursor.fetchall()
-    for row in rows:
-        print (row)
-    logging.info("show_destinations completed.")    
 
 def show_date_time():
     now = datetime.datetime.now()
@@ -58,18 +36,24 @@ def main():
         print("\nChoose an option:")
         print("1. Pilot Management")
         print("2. Airline Management")
-        print("3. Flight Management")
-        print("4. Exit")
+        print("3. Airplane Management")
+        print("4. Destination Management")
+        print("5. Flight Management")
+        print("6. Exit")
 
-        choice = input("Enter your choice (1-4): ")
+        choice = input("Enter your choice (1-6): ")
 
         if choice == "1":
             menus.pilot_management_menu()
         elif choice == "2":
             menus.airline_management_menu()
         elif choice == "3":
-            menus.flight_management_menu()
+            menus.airplane_management_menu()
         elif choice == "4":
+            menus.destination_management_menu()
+        elif choice == "5":
+            menus.flight_management_menu()
+        elif choice == "6":
             print("\nGoodbye!")
             break
         else:

@@ -141,7 +141,7 @@ def setup_test_data():
 
     # Insert sample records into the Airline table
     cursor.executemany("""
-        INSERT INTO Airline (AirtlineID, Name, IATACode, Terminal)
+        INSERT INTO Airline (AirlineID, Name, IATACode, Terminal)
         VALUES (?, ?, ?, ?);
 """, [
     (1, 'British Airways', 'BA', '3, 5'),
