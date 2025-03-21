@@ -1,9 +1,8 @@
 import datetime
 import logging
-import sqlite3
 import menus
-
 import setupdatabase as sd
+
 
 # Configure logging
 logging.basicConfig(
@@ -39,9 +38,9 @@ def main():
         print("3. Airplane Management")
         print("4. Destination Management")
         print("5. Flight Management")
-        print("6. Exit")
+        print("X. Exit")
 
-        choice = input("Enter your choice (1-6): ")
+        choice = input("Enter your choice (1-5 || X): ")
 
         if choice == "1":
             menus.pilot_management_menu()
@@ -53,7 +52,7 @@ def main():
             menus.destination_management_menu()
         elif choice == "5":
             menus.flight_management_menu()
-        elif choice == "6":
+        elif choice.upper() == "X":
             print("\nGoodbye!")
             break
         else:

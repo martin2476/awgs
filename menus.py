@@ -7,19 +7,19 @@ def pilot_management_menu():
         print("1. Add Pilot")
         print("2. View Pilots")
         print("3. View Pilot Schedule")
-        print("4. Back to Main Menu")
+        print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
         
         if choice == "1":
             logging.info("Adding a pilot.")
-            # Placeholder for adding pilot logic
+            pilot.add_pilot('Martin','Fenech','LN07734')
         elif choice == "2":
             logging.info("Viewing all pilots.")
             pilot.show_pilots()
         elif choice == "3":
             logging.info("View pilot schedule.")
-        elif choice == "4":
+        elif choice.upper() == "X":
             break
         else:
             print("Invalid choice. Please try again.")
@@ -29,7 +29,7 @@ def airline_management_menu():
         print("\n=== Airline Management Menu ===")
         print("1. Add Airline")
         print("2. View Airlines")
-        print("3. Back to Main Menu")
+        print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
         
@@ -39,7 +39,7 @@ def airline_management_menu():
         elif choice == "2":
             logging.info("Viewing all airlines.")
             pilot.show_airlines()
-        elif choice == "3":
+        elif choice.upper() == "X":
             break
         else:
             print("Invalid choice. Please try again.")
@@ -49,7 +49,7 @@ def airplane_management_menu():
         print("\n=== Airplane Management Menu ===")
         print("1. Add Airplane")
         print("2. View Airplanes")
-        print("3. Back to Main Menu")
+        print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
         
@@ -59,7 +59,7 @@ def airplane_management_menu():
         elif choice == "2":
             logging.info("Viewing all airplanes.")
             pilot.show_airplanes()
-        elif choice == "3":
+        elif choice.upper() == "X":
             break
         else:
             print("Invalid choice. Please try again.")            
@@ -69,7 +69,7 @@ def destination_management_menu():
         print("\n=== Destination Management Menu ===")
         print("1. Add Destination")
         print("2. View Destinations")
-        print("3. Back to Main Menu")
+        print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
         
@@ -79,7 +79,7 @@ def destination_management_menu():
         elif choice == "2":
             logging.info("Viewing all destinations.")
             pilot.show_destinations()
-        elif choice == "3":
+        elif choice.upper() == "X":
             break
         else:
             print("Invalid choice. Please try again.")                
@@ -90,7 +90,7 @@ def flight_management_menu():
         print("1. Add Flight")
         print("2. View Flights")
         print("3. Update Flight")
-        print("4. Back to Main Menu")
+        print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
         
@@ -103,7 +103,7 @@ def flight_management_menu():
         elif choice == "3":
             logging.info("Update a flight.")
             # Placeholder for updating a flight            
-        elif choice == "4":
+        elif choice.upper() == "X":
             break
         else:
             print("Invalid choice. Please try again.")            

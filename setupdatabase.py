@@ -2,9 +2,10 @@
 import datetime
 import logging
 import sqlite3
+import config
 
 def cleanup_database():
-    conn = sqlite3.connect('awgsstore')
+    conn = sqlite3.connect(config.DATABASE_NAME)
     now = datetime.datetime.now()
     logging.info("Deleting all tables.")
     
@@ -24,7 +25,7 @@ def cleanup_database():
     conn.close()
 
 def setup_database():
-    conn = sqlite3.connect('awgsstore')
+    conn = sqlite3.connect(config.DATABASE_NAME)
     now = datetime.datetime.now()
     logging.info("Creating database.")
     
@@ -82,7 +83,7 @@ def setup_database():
     conn.close()
 
 def setup_test_data():
-    conn = sqlite3.connect('awgsstore')
+    conn = sqlite3.connect(config.DATABASE_NAME)
     now = datetime.datetime.now()
     logging.info("Database {conn.database} has been created.")
     
