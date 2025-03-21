@@ -1,12 +1,13 @@
 import datetime
 import logging
 import sqlite3
+import menus
 
 import setupdatabase as sd
 
 # Configure logging
 logging.basicConfig(
-    level=logging.DEBUG,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    level=logging.CRITICAL,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
     format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
 )
 
@@ -29,16 +30,7 @@ def show_planes():
         print (row)
     logging.info("show_planes completed.")
     
-def show_pilots():
-    logging.info("show_pilots started.")
-    conn = sqlite3.connect('awgsstore')
-    now = datetime.datetime.now()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Pilot")
-    rows = cursor.fetchall()
-    for row in rows:
-        print (row)
-    logging.info("show_pilots completed.")
+
 
 def show_destinations():
     logging.info("show_destinations started.")
@@ -64,19 +56,19 @@ def main():
 
     while True:
         print("\nChoose an option:")
-        print("1. Show all planes")
-        print("2. Show all pilots")
-        print("3. Show all destinations")
+        print("1. Pilot Management")
+        print("2. Airline Management")
+        print("3. Flight Management")
         print("4. Exit")
 
         choice = input("Enter your choice (1-4): ")
 
         if choice == "1":
-            show_planes()
+            menus.pilot_management_menu()
         elif choice == "2":
-            show_pilots()
+            menus.airline_management_menu()
         elif choice == "3":
-            show_destinations()
+            menus.flight_management_menu()
         elif choice == "4":
             print("\nGoodbye!")
             break

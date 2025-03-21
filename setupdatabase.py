@@ -41,24 +41,37 @@ def setup_database():
     cursor.execute("""CREATE TABLE Plane (
                  PlaneID INTEGER PRIMARY KEY,
                  AircraftRegistrationNumber TEXT, 
-                 Model TEXT, Manufacturer , 
+                 Manufacturer TEXT,
+                 Model TEXT,  
                  TailNumber TEXT UNIQUE, 
                  Capacity TEXT
+                 );""")
+    cursor.execute("""CREATE TABLE Airline (
+                 AirlineID INTEGER PRIMARY KEY,
+                 Name TEXT,
+                 IATACode TEXT,
+                 Terminal TEXT
                  );""")
     cursor.execute("""CREATE TABLE Destination (
                  DestinationID INTEGER PRIMARY KEY,
                  Name TEXT,
                  Country TEXT,
-                 AirportCode TEXT UNIQUE
+                 AirportCode TEXT UNIQUE,
+                 DistanceFromLondon INTEGER         --
                  );""")
     cursor.execute("""CREATE TABLE FlightDetails (
                  FlightID INTEGER PRIMARY KEY,       -- Unique ID for the flight
+                 FlightName TEXT,                    -- 
                  PilotID INTEGER,                    -- Link to the pilot
                  PlaneID INTEGER,                    -- Link to the plane
                  OriginID INTEGER,                   -- Link to the origin destination
                  DestinationID INTEGER,              -- Link to the destination
-                 FlightDate TEXT,                    -- Date of the flight (ISO-8601 format)
+                 ScheduledFlightDate TEXT,                    -- Scheduled Date / Time of the flight (ISO-8601 format)
+                 ActualFlightDate TEXT,                    -- Actual Date / Time of the flight (ISO-8601 format)
                  DurationMinutes INTEGER,            -- Duration of the flight in minutes
+                 Terminal TEXT,
+                 Gate TEXT,
+                 Airline TEXT,                      -- The airline operating the flight
                  FOREIGN KEY (PilotID) REFERENCES Pilots(PilotID),          -- Foreign key to Pilots table
                  FOREIGN KEY (PlaneID) REFERENCES Planes(PlaneID),          -- Foreign key to Planes table
                  FOREIGN KEY (OriginID) REFERENCES Destinations(DestinationID), -- Foreign key to Destinations table
@@ -75,7 +88,7 @@ def setup_test_data():
     
     cursor = conn.cursor()
 
-    # Insert sample records
+    # Insert sample records into the Pilot table
     cursor.executemany("""
         INSERT INTO Pilot (PilotID, Name, Surname, LicenseNumber)
         VALUES (?, ?, ?, ?);
@@ -91,6 +104,57 @@ def setup_test_data():
         (9, 'Benjamin', 'Clark', 'LN90123'),
         (10, 'Charlotte', 'Hall', 'LN01234')
     ])
+
+    # Insert sample records into the Plane table
+    cursor.executemany("""
+        INSERT INTO Plane (PlaneID, AircraftRegistrationNumber, Manufacturer, Model, TailNumber, Capacity)
+        VALUES (?, ?, ?, ?, ?, ?);
+    """, [
+        (1, 'G-ABCD', 'Boeing', '737-800', 'T1234', 189),
+        (2, 'N-EFGH', 'Airbus', 'A320', 'T2345', 180),
+        (3, 'F-IJKL', 'Cessna', 'Citation X', 'T3456', 12),
+        (4, 'D-MNOP', 'Gulfstream', 'G550', 'T4567', 16),
+        (5, 'G-QRST', 'Bombardier', 'Global 7500', 'T5678', 19),
+        (6, 'N-UVWX', 'Boeing', '787-9', 'T6789', 296),
+        (7, 'F-YZAB', 'Airbus', 'A350-900', 'T7890', 315),
+        (8, 'D-CDEF', 'Dassault', 'Falcon 900', 'T8901', 14),
+        (9, 'G-GHIJ', 'Embraer', 'Phenom 300', 'T9012', 10),
+        (10, 'N-KLMN', 'Piper', 'M600', 'T0123', 6)
+    ])
+
+    # Insert sample records into the Destination table
+    cursor.executemany("""
+        INSERT INTO Destination (DestinationID, Name, Country, AirportCode,DistanceFromLondon)
+        VALUES (?, ?, ?, ?,?);
+    """, [
+        (1, 'Paris Charles de Gaulle', 'France', 'CDG', 344),
+        (2, 'New York John F. Kennedy', 'United States', 'JFK', 5570),
+        (3, 'Tokyo Narita', 'Japan', 'NRT', 5973),
+        (4, 'Dubai International', 'United Arab Emirates', 'DXB', 3405),
+        (5, 'Sydney Kingsford Smith', 'Australia', 'SYD', 10563),
+        (6, 'Singapore Changi', 'Singapore', 'SIN', 6762),
+        (7, 'Cape Town International', 'South Africa', 'CPT', 6015),
+        (8, 'Toronto Pearson', 'Canada', 'YYZ', 3557),
+        (9, 'Frankfurt Airport', 'Germany', 'FRA', 406),
+        (10, 'São Paulo Guarulhos', 'Brazil', 'GRU', 5921)
+    ])    
+
+    # Insert sample records into the Airline table
+    cursor.executemany("""
+        INSERT INTO Airline (AirtlineID, Name, IATACode, Terminal)
+        VALUES (?, ?, ?, ?);
+""", [
+    (1, 'British Airways', 'BA', '3, 5'),
+    (2, 'Virgin Atlantic', 'VS', '3' ),
+    (3, 'American Airlines', 'AA', '3' ),
+    (4, 'Lufthansa', 'LH', '2' ),
+    (5, 'Emirates', 'EK', '3' ),
+    (6, 'Qatar Airways', 'QR', '4' ),
+    (7, 'Singapore Airlines', 'SQ', '2' ),
+    (8, 'Air Canada', 'AC', '2' ),
+    (9, 'KLM Royal Dutch', 'KL', '4' ),
+    (10, 'Qantas', 'QF', '3' )
+])
 
     conn.commit()
     conn.close()
