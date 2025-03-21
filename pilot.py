@@ -4,7 +4,7 @@ import config
 
 def show_pilots():
     logging.info("show_pilots started.")
-    conn = sqlite3.connect(DATABASE_NAME)
+    conn = sqlite3.connect(config.DATABASE_NAME)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Pilot")
     rows = cursor.fetchall()

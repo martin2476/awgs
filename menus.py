@@ -13,7 +13,10 @@ def pilot_management_menu():
         
         if choice == "1":
             logging.info("Adding a pilot.")
-            pilot.add_pilot('Martin','Fenech','LN07734')
+            name = input("Enter the pilot's first name: ")
+            surname = input("Enter the pilot's surname: ")
+            licenseNumber = input("Enter the pilot's license number: ")
+            pilot.add_pilot(name,surname,licenseNumber)
         elif choice == "2":
             logging.info("Viewing all pilots.")
             pilot.show_pilots()
