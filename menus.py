@@ -5,8 +5,10 @@ def pilot_management_menu():
     while True:
         print("\n=== Pilot Management Menu ===")
         print("1. Add Pilot")
-        print("2. View Pilots")
-        print("3. View Pilot Schedule")
+        print("2. Amend Pilot")
+        print("3. Delete Pilot")
+        print("4. View Pilots")
+        print("5. View Pilot Schedule")
         print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -17,9 +19,16 @@ def pilot_management_menu():
             licenseNumber = input("Enter the pilot's license number: ")
             databaseUtil.add_pilot(name,surname,licenseNumber)
         elif choice == "2":
-            databaseUtil.show_pilots()
+            pilotId = input("Enter the pilot's id: ")
+            databaseUtil.amend_pilot(pilotId)
         elif choice == "3":
-            logging.info("View pilot schedule.")
+            pilotId = input("Enter the pilot's id: ")
+            databaseUtil.delete_pilot(pilotId)
+        elif choice == "4":
+            databaseUtil.show_pilots()
+        elif choice == "5":
+            pilotId = input("Enter the pilot's id: ")
+            databaseUtil.show_pilot_schedule(pilotId)
         elif choice.upper() == "X":
             break
         else:
@@ -29,7 +38,9 @@ def airline_management_menu():
     while True:
         print("\n=== Airline Management Menu ===")
         print("1. Add Airline")
-        print("2. View Airlines")
+        print("2. Amend Airline")        
+        print("3. Delete Airline")
+        print("4. View Airlines")        
         print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -40,7 +51,13 @@ def airline_management_menu():
             terminal = input("Enter the airline's terminal: ")
             databaseUtil.add_airline(name,iataCode,terminal)
         elif choice == "2":
-            databaseUtil.show_airlines()
+            airlineId = input("Enter the Airline's id: ")
+            databaseUtil.delete_airline(airlineId)
+        elif choice == "3":
+            airlineId = input("Enter the Airlines's id: ")
+            databaseUtil.amend_airline(airlineId)
+        elif choice == "4":
+            databaseUtil.show_airlines()                  
         elif choice.upper() == "X":
             break
         else:
@@ -50,7 +67,9 @@ def airplane_management_menu():
     while True:
         print("\n=== Airplane Management Menu ===")
         print("1. Add Airplane")
-        print("2. View Airplanes")
+        print("2. Amend Airplane")
+        print("3. Delete Airplane")
+        print("4. View Airplanes")
         print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -63,6 +82,12 @@ def airplane_management_menu():
             capacity = input("Enter the airplane's capacity: ")            
             databaseUtil.add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity)
         elif choice == "2":
+            airplaneId = input("Enter the Airplane's id: ")
+            databaseUtil.amend_airplane(airplaneId)    
+        elif choice == "3":
+            airplaneId = input("Enter the Airplane's id: ")
+            databaseUtil.delete_airplane(airplaneId)
+        elif choice == "4":
             databaseUtil.show_airplanes()
         elif choice.upper() == "X":
             break
@@ -73,7 +98,9 @@ def destination_management_menu():
     while True:
         print("\n=== Destination Management Menu ===")
         print("1. Add Destination")
-        print("2. View Destinations")
+        print("2. Amend Destination")
+        print("3. Delete Destination")
+        print("4. View Destinations")
         print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -85,6 +112,12 @@ def destination_management_menu():
             distanceFromLondon = input("Enter the destination's distance from London: ")            
             databaseUtil.add_destinations(name, country, airportCode,distanceFromLondon)
         elif choice == "2":
+            destinationId = input("Enter the Destination's id: ")
+            databaseUtil.amend_destination(destinationId)      
+        elif choice == "3":
+            destinationId = input("Enter the Destination's id: ")
+            databaseUtil.delete_destination(destinationId)
+        elif choice == "4":
             databaseUtil.show_destinations()
         elif choice.upper() == "X":
             break
@@ -95,8 +128,9 @@ def flight_management_menu():
     while True:
         print("\n=== Flight Management Menu ===")
         print("1. Add Flight")
-        print("2. View Flights")
-        print("3. Update Flight")
+        print("2. Amend Flight")
+        print("3. Delete Flight")        
+        print("4. View Flights")        
         print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -105,11 +139,14 @@ def flight_management_menu():
             logging.info("Adding a new flight.")
             # Placeholder for adding pilot logic
         elif choice == "2":
-            logging.info("Viewing flights.")
-            # Placeholder for viewing pilots logic
-        elif choice == "3":
             logging.info("Update a flight.")
             # Placeholder for updating a flight            
+        elif choice == "3":
+            logging.info("Delete a flight.")
+            # Placeholder for updating a flight            
+        elif choice == "4":
+            logging.info("Viewing flights.")
+            # Placeholder for viewing pilots logic
         elif choice.upper() == "X":
             break
         else:
