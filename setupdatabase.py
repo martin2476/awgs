@@ -104,6 +104,11 @@ def setup_test_data():
         (8, 'Mia', 'Moore', 'LN89012'),
         (9, 'Benjamin', 'Clark', 'LN90123'),
         (10, 'Charlotte', 'Hall', 'LN01234')
+        (11, 'Henry', 'Adams', 'LN13579'),
+        (12, 'Ava', 'Johnson', 'LN24680'),
+        (13, 'Noah', 'Evans', 'LN35791'),
+        (14, 'Ella', 'Roberts', 'LN46802'),
+        (15, 'Lucas', 'Garcia', 'LN57913')
     ])
 
     # Insert sample records into the Plane table
@@ -121,6 +126,11 @@ def setup_test_data():
         (8, 'D-CDEF', 'Dassault', 'Falcon 900', 'T8901', 14),
         (9, 'G-GHIJ', 'Embraer', 'Phenom 300', 'T9012', 10),
         (10, 'N-KLMN', 'Piper', 'M600', 'T0123', 6)
+        (11, 'G-UVWX', 'Boeing', '747-400', 'T1357', 416),
+        (12, 'N-YZAB', 'Airbus', 'A220-300', 'T2468', 141),
+        (13, 'F-CDEF', 'Cessna', 'Skyhawk 172', 'T3579', 4),
+        (14, 'D-GHIJ', 'Dassault', 'Falcon 2000', 'T4680', 19),
+        (15, 'G-KLMN', 'Embraer', 'E175', 'T5791', 88)
     ])
 
     # Insert sample records into the Destination table
@@ -138,24 +148,34 @@ def setup_test_data():
         (8, 'Toronto Pearson', 'Canada', 'YYZ', 3557),
         (9, 'Frankfurt Airport', 'Germany', 'FRA', 406),
         (10, 'São Paulo Guarulhos', 'Brazil', 'GRU', 5921)
+        (11, 'Los Angeles International', 'United States', 'LAX', 8757),
+        (12, 'Hong Kong International', 'Hong Kong', 'HKG', 5990),
+        (13, 'Amsterdam Schiphol', 'Netherlands', 'AMS', 356),
+        (14, 'Madrid Barajas', 'Spain', 'MAD', 785),
+        (15, 'Mexico City International', 'Mexico', 'MEX', 5533)
     ])    
 
     # Insert sample records into the Airline table
     cursor.executemany("""
         INSERT INTO Airline (AirlineID, Name, IATACode, Terminal)
         VALUES (?, ?, ?, ?);
-""", [
-    (1, 'British Airways', 'BA', '3, 5'),
-    (2, 'Virgin Atlantic', 'VS', '3' ),
-    (3, 'American Airlines', 'AA', '3' ),
-    (4, 'Lufthansa', 'LH', '2' ),
-    (5, 'Emirates', 'EK', '3' ),
-    (6, 'Qatar Airways', 'QR', '4' ),
-    (7, 'Singapore Airlines', 'SQ', '2' ),
-    (8, 'Air Canada', 'AC', '2' ),
-    (9, 'KLM Royal Dutch', 'KL', '4' ),
-    (10, 'Qantas', 'QF', '3' )
-])
+    """, [
+        (1, 'British Airways', 'BA', '3, 5'),
+        (2, 'Virgin Atlantic', 'VS', '3' ),
+        (3, 'American Airlines', 'AA', '3' ),
+        (4, 'Lufthansa', 'LH', '2' ),
+        (5, 'Emirates', 'EK', '3' ),
+        (6, 'Qatar Airways', 'QR', '4' ),
+        (7, 'Singapore Airlines', 'SQ', '2' ),
+        (8, 'Air Canada', 'AC', '2' ),
+        (9, 'KLM Royal Dutch', 'KL', '4' ),
+        (10, 'Qantas', 'QF', '3' )
+        (11, 'Delta Air Lines', 'DL', '4'),
+        (12, 'Turkish Airlines', 'TK', '3'),
+        (13, 'Etihad Airways', 'EY', '4'),
+        (14, 'Aer Lingus', 'EI', '2'),
+        (15, 'Swiss International Air Lines', 'LX', '2')
+    ])
 
     conn.commit()
     conn.close()
