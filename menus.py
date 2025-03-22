@@ -145,8 +145,11 @@ def flight_management_menu():
             logging.info("Delete a flight.")
             # Placeholder for updating a flight            
         elif choice == "4":
-            logging.info("Viewing flights.")
-            databaseUtil.show_flights()
+            flightName = input("Enter the Flight's name: ")
+            flightDestination = input("Enter the Flight's destination: ")
+            flightTerminal =  input("Enter the Flight's terminal: ")
+            flightDate =  input("Enter the Flight's date: ")
+            databaseUtil.show_flights(flightName,flightDestination,flightTerminal,flightDate)
         elif choice.upper() == "X":
             break
         else:
@@ -157,7 +160,7 @@ def update_flight_menu():
         print("\n=== Update Flight Menu ===")
         print("1. Change Flight Status")
         print("2. Assign Pilot to Flight")
-        print("3. Update Departure time")        
+        print("3. Update Departure time")   
         print("4. Update Landing time")
         print("5. Assign gate")
         print("X. Back")
@@ -169,14 +172,40 @@ def update_flight_menu():
             for status in util.FlightStatus:
                 print(f"{status.name} = {status.value}")
             statusId = input("Enter the Flight's status: ")
-            databaseUtil.change_flight_status(flightId, util.FlightStatus(int(statusId)).name)
+            databaseUtil.update_flight_status(flightId, util.FlightStatus(int(statusId)).name)
         elif choice == "2":
-            pass
+            #print out the pilots
+            flightId = input("Enter the Flight's id: ")
+            pilotId  = input("Enter the Pilot's id: ")
+            databaseUtil.update_flight_pilot(flightId,pilotId)
         elif choice == "3":
-            pass
+#scheduled_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d %H:%M:%S")
+            flightId = input("Enter the Flight's id: ")
+            statusId = input("Enter the Flight's status: ")
+            databaseUtil.change_flight_status(flightId, util.FlightStatus(int(statusId)).name)
         elif choice == "4":
+            pass
+        elif choice == "5":
+#scheduled_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d %H:%M:%S")
+            flightId = input("Enter the Flight's id: ")
+            gateNumber = input("Enter the gate number: ")
+            databaseUtil.update_flight_gate(flightId, gateNumber)
+        elif choice.upper() == "X":
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+def reporting_menu():
+    while True:
+        print("\n=== Reporting Menu ===")
+        print("1. Number of flights per destination")
+        print("X. Back")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == "1":
             pass
         elif choice.upper() == "X":
             break
         else:
-            print("Invalid choice. Please try again.")                        
+            print("Invalid choice. Please try again.")            

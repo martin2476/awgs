@@ -63,38 +63,96 @@ def add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capaci
     values=(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity))
 
 # Flights section
-def show_flights():
+def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None):
     logging.info("Showing all Flights.")
-    show_records("FlightDetails")
+    
+    # Build selection criteria dynamically
+    criteria = []
+    if flightName:
+        criteria.append(f"FlightName = '{flightName}'")
+    if flightDestination:
+        criteria.append(f"DestinationID = '{flightDestination}'")
+    if flightTerminal:
+        criteria.append(f"Terminal = '{flightTerminal}'")
+    if flightDate:
+        criteria.append(f"ScheduledFlightDate = '{flightDate}'")
+    
+    # Join criteria with AND keyword if any exist
+    query_criteria = " AND ".join(criteria) if criteria else None
+    
+    # Fetch records with optional criteria
+    show_records("FlightDetails", query_criteria)
 
-def change_flight_status(flightID,status):
-    logging.info("Change flight status.")
+def update_flight_status(flightId,status):
+    update_flight_record("FlightDetails", "FlightStatus", status, "FlightID", flightId)
+
+def update_flight_gate(flightId,gate):
+    update_flight_record("FlightDetails", "FlightStatus", gate, "FlightID", flightId)
+
+def update_flight_pilot(flightId,pilotId):
+    try:
+        # Connect to the database using a context manager
+        with sqlite3.connect(config.DATABASE_NAME) as conn:
+            cursor = conn.cursor()
+
+        pilot_flight_details = []
+        cursor.executemany("""
+        INSERT INTO FlightPilots (FlightID, PilotID) 
+        VALUES (?, ?);
+    """, pilot_flight_details)
+        
+    except sqlite3.IntegrityError as e:
+        logging.error(f"Integrity error while updating record in FlightPilots: {e}")
+    
+    except sqlite3.Error as e:
+        logging.error(f"Database error occurred while updating record in FlightPilots: {e}")
+    
+    except Exception as e:
+        logging.error(f"Unexpected error occurred while updating record in FlightPilots: {e}")
+    
+    finally:
+        logging.info("update_record completed.")
+
+
+def update_flight_record(table_name, column_name, value, condition_column, condition_value):
+    """
+    A generic function to update a specific column in a table based on a condition.
+
+    Args:
+    - table_name (str): The name of the table to update.
+    - column_name (str): The column to update.
+    - value: The new value to set (can be a string, integer, etc.).
+    - condition_column (str): The column to use in the WHERE clause.
+    - condition_value: The value for the WHERE clause to match.
+
+    Example Usage:
+    update_record("FlightDetails", "FlightStatus", "LANDED", "FlightID", 1)
+    """
+    logging.info(f"Updating {column_name} in {table_name} where {condition_column} = {condition_value}.")
     try:
         # Connect to the database using a context manager
         with sqlite3.connect(config.DATABASE_NAME) as conn:
             cursor = conn.cursor()
             
-            # Execute the query
-            cursor.execute("UPDATE FlightDetails SET FlightStatus = ? WHERE FlightID = ?;", (status, flightID))
+            # Construct the SQL query dynamically
+            query = f"UPDATE {table_name} SET {column_name} = ? WHERE {condition_column} = ?;"
+            cursor.execute(query, (value, condition_value))
             
             # Commit the transaction
             conn.commit()
+            logging.info(f"Record updated successfully in {table_name}: {column_name} set to {value} where {condition_column} = {condition_value}.")
     
     except sqlite3.IntegrityError as e:
-        # Handle specific SQLite exceptions
-        logging.error(f"Integrity error while updating record in FlightDetails: {e}")
+        logging.error(f"Integrity error while updating record in {table_name}: {e}")
     
     except sqlite3.Error as e:
-        # Log general database errors
-        logging.error(f"Database error occurred while updating record to FlightDetails: {e}")
+        logging.error(f"Database error occurred while updating record in {table_name}: {e}")
     
     except Exception as e:
-        # Handle unexpected errors
-        logging.error(f"Unexpected error occurred while updating record to FlightDetails: {e}")
+        logging.error(f"Unexpected error occurred while updating record in {table_name}: {e}")
     
     finally:
-        logging.info(f"update_record completed for table=FlightDetails")
-
+        logging.info("update_record completed.")
 
 # Generic CRUD section
 def add_record(table_name, column_names, values):
@@ -179,31 +237,36 @@ def delete_record(table_name, condition, params=()):
         logging.info("delete_record completed.")
 
 
-def show_records(table_name):
+def show_records(table_name, criteria=None):
     """
-    A generic function to fetch and display records from any specified database table.
+    A generic function to fetch and display records from any specified database table with optional selection criteria.
 
     Args:
     - table_name (str): Name of the table to fetch records from.
+    - criteria (str, optional): SQL WHERE clause for filtering records. Default is None.
     """
-    logging.info(f"show_records started for table={table_name}")
-    
+    logging.info(f"show_records started for table={table_name}, criteria={criteria}")
+
     try:
         # Use a context manager for safe connection handling
         with sqlite3.connect(config.DATABASE_NAME) as conn:
             cursor = conn.cursor()
             
-            # Dynamically construct the query
-            query = f"SELECT * FROM {table_name}"
+            # Construct query with optional criteria
+            if criteria:
+                query = f"SELECT * FROM {table_name} WHERE {criteria}"
+            else:
+                query = f"SELECT * FROM {table_name}"
+            
             cursor.execute(query)
             rows = cursor.fetchall()
             
             # Use descriptive messages while printing
             for row in rows:
                 print(f"{table_name} Record: {row}")
-                
-        logging.info(f"show_records completed successfully for table={table_name}")
-    
+            
+        logging.info(f"show_records completed successfully for table={table_name}, criteria={criteria}")
+
     except sqlite3.Error as e:
         # Log database-specific errors
         logging.error(f"Database error occurred while fetching records from {table_name}: {e}")

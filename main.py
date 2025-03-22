@@ -38,6 +38,7 @@ def main():
         print("3. Airplane Management")
         print("4. Destination Management")
         print("5. Flight Management")
+        print("6. Reporting")
         print("X. Exit")
 
         choice = input("Enter your choice (1-5 || X): ")
@@ -52,6 +53,8 @@ def main():
             menus.destination_management_menu()
         elif choice == "5":
             menus.flight_management_menu()
+        elif choice == "6":
+            menus.reporting_menu()            
         elif choice.upper() == "X":
             print("\nGoodbye!")
             break
