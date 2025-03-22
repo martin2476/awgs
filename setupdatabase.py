@@ -4,6 +4,7 @@ import random
 import logging
 import sqlite3
 import config
+import util
 
 def cleanup_database():
     conn = sqlite3.connect(config.DATABASE_NAME)
@@ -61,10 +62,18 @@ def setup_database():
                  AirportCode TEXT UNIQUE,
                  DistanceFromLondon INTEGER         --
                  );""")
+    
+    #Flights under 8 hours normally have 2 pilots while flights above 8 hours can have 1 or 2 relief pilots
+    #there I am using linkage table
+    cursor.execute("""CREATE TABLE FlightPilots (
+                 ID INTEGER PRIMARY KEY,
+                 FlightID INTEGER,       -- Link to the flight
+                 PilotID INTEGER,        -- Link to the pilot
+                 UNIQUE (FlightID, PilotID) -- Composite Unique Key
+                 );""")
     cursor.execute("""CREATE TABLE FlightDetails (
                  FlightID INTEGER PRIMARY KEY,       -- Unique ID for the flight
                  FlightName TEXT,                    -- 
-                 PilotID INTEGER,                    -- Link to the pilot
                  PlaneID INTEGER,                    -- Link to the plane
                  OriginID INTEGER,                   -- Link to the origin destination
                  DestinationID INTEGER,              -- Link to the destination
@@ -74,7 +83,7 @@ def setup_database():
                  Terminal TEXT,
                  Gate TEXT,
                  Airline TEXT,                      -- The airline operating the flight
-                 FOREIGN KEY (PilotID) REFERENCES Pilots(PilotID),          -- Foreign key to Pilots table
+                 FlightStatus TEXT,                      -- the current flight status - FlightStatus enum
                  FOREIGN KEY (PlaneID) REFERENCES Planes(PlaneID),          -- Foreign key to Planes table
                  FOREIGN KEY (OriginID) REFERENCES Destinations(DestinationID), -- Foreign key to Destinations table
                  FOREIGN KEY (DestinationID) REFERENCES Destinations(DestinationID) -- Foreign key to Destinations table
@@ -181,10 +190,15 @@ def setup_test_data():
 
     # Generate 15 sample records for FlightDetails
     sample_flight_details = []
+    sample_pilot_flight_details = []
 
     for flight_id in range(1, 16):
         flight_name = f"Flight-{flight_id:03}"  # Example: Flight-001, Flight-002, etc.
         pilot_id = random.randint(1, 15)  # Random PilotID from 1 to 15
+        copilot_id = random.randint(1, 15)  # Random PilotID from 1 to 15
+        while (copilot_id == pilot_id):
+            copilot_id = random.randint(1,15) # Copilot should be different from the Pilot
+    
         plane_id = random.randint(1, 15)  # Random PlaneID from 1 to 15
         origin_id = 16                    # London Heathrow Airport is the hub and all flights originate from it
         destination_id = random.randint(1, 15)  # Random DestinationID from 1 to 15
@@ -207,7 +221,6 @@ def setup_test_data():
         sample_flight_details.append((
             flight_id,
             flight_name,
-            pilot_id,
             plane_id,
             origin_id,
             destination_id,
@@ -216,17 +229,45 @@ def setup_test_data():
             duration_minutes,
             terminal,
             gate,
-            airline
+            airline,
+            util.FlightStatus.SCHEDULED.name
         ))
+
+        sample_pilot_flight_details.append((
+            flight_id,
+            pilot_id
+        ))        
 
     # Insert records into the FlightDetails table
     cursor.executemany("""
         INSERT INTO FlightDetails (
-            FlightID, FlightName, PilotID, PlaneID, OriginID, DestinationID, 
-            ScheduledFlightDate, ActualFlightDate, DurationMinutes, Terminal, Gate, Airline
+            FlightID, FlightName, PlaneID, OriginID, DestinationID, 
+            ScheduledFlightDate, ActualFlightDate, DurationMinutes, Terminal, Gate, Airline, FlightStatus
         ) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     """, sample_flight_details)
+
+    # Insert records into the FlightPilots table
+    cursor.executemany("""
+        INSERT INTO FlightPilots (
+            FlightID, PilotID
+        ) 
+        VALUES (?, ?);
+    """, sample_pilot_flight_details)
+
+    #adding the copilot
+    sample_pilot_flight_details.clear()
+    sample_pilot_flight_details.append((
+            flight_id,
+            copilot_id
+        ))       
+    
+    cursor.executemany("""
+        INSERT INTO FlightPilots (
+            FlightID, PilotID
+        ) 
+        VALUES (?, ?);
+    """, sample_pilot_flight_details)
 
     conn.commit()
     conn.close()

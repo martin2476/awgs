@@ -67,6 +67,35 @@ def show_flights():
     logging.info("Showing all Flights.")
     show_records("FlightDetails")
 
+def change_flight_status(flightID,status):
+    logging.info("Change flight status.")
+    try:
+        # Connect to the database using a context manager
+        with sqlite3.connect(config.DATABASE_NAME) as conn:
+            cursor = conn.cursor()
+            
+            # Execute the query
+            cursor.execute("UPDATE FlightDetails SET FlightStatus = ? WHERE FlightID = ?;", (status, flightID))
+            
+            # Commit the transaction
+            conn.commit()
+    
+    except sqlite3.IntegrityError as e:
+        # Handle specific SQLite exceptions
+        logging.error(f"Integrity error while updating record in FlightDetails: {e}")
+    
+    except sqlite3.Error as e:
+        # Log general database errors
+        logging.error(f"Database error occurred while updating record to FlightDetails: {e}")
+    
+    except Exception as e:
+        # Handle unexpected errors
+        logging.error(f"Unexpected error occurred while updating record to FlightDetails: {e}")
+    
+    finally:
+        logging.info(f"update_record completed for table=FlightDetails")
+
+
 # Generic CRUD section
 def add_record(table_name, column_names, values):
     """

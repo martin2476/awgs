@@ -1,5 +1,6 @@
 import logging
 import databaseUtil
+import util
 
 def pilot_management_menu():
     while True:
@@ -139,8 +140,7 @@ def flight_management_menu():
             logging.info("Adding a new flight.")
             # Placeholder for adding pilot logic
         elif choice == "2":
-            logging.info("Update a flight.")
-            # Placeholder for updating a flight            
+            update_flight_menu()
         elif choice == "3":
             logging.info("Delete a flight.")
             # Placeholder for updating a flight            
@@ -151,3 +151,32 @@ def flight_management_menu():
             break
         else:
             print("Invalid choice. Please try again.")            
+
+def update_flight_menu():
+    while True:
+        print("\n=== Update Flight Menu ===")
+        print("1. Change Flight Status")
+        print("2. Assign Pilot to Flight")
+        print("3. Update Departure time")        
+        print("4. Update Landing time")
+        print("5. Assign gate")
+        print("X. Back")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == "1":
+            flightId = input("Enter the Flight's id: ")
+            for status in util.FlightStatus:
+                print(f"{status.name} = {status.value}")
+            statusId = input("Enter the Flight's status: ")
+            databaseUtil.change_flight_status(flightId, util.FlightStatus(int(statusId)).name)
+        elif choice == "2":
+            pass
+        elif choice == "3":
+            pass
+        elif choice == "4":
+            pass
+        elif choice.upper() == "X":
+            break
+        else:
+            print("Invalid choice. Please try again.")                        
