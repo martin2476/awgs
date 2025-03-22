@@ -103,7 +103,7 @@ def setup_test_data():
         (7, 'Liam', 'Wilson', 'LN78901'),
         (8, 'Mia', 'Moore', 'LN89012'),
         (9, 'Benjamin', 'Clark', 'LN90123'),
-        (10, 'Charlotte', 'Hall', 'LN01234')
+        (10, 'Charlotte', 'Hall', 'LN01234'),
         (11, 'Henry', 'Adams', 'LN13579'),
         (12, 'Ava', 'Johnson', 'LN24680'),
         (13, 'Noah', 'Evans', 'LN35791'),
@@ -125,7 +125,7 @@ def setup_test_data():
         (7, 'F-YZAB', 'Airbus', 'A350-900', 'T7890', 315),
         (8, 'D-CDEF', 'Dassault', 'Falcon 900', 'T8901', 14),
         (9, 'G-GHIJ', 'Embraer', 'Phenom 300', 'T9012', 10),
-        (10, 'N-KLMN', 'Piper', 'M600', 'T0123', 6)
+        (10, 'N-KLMN', 'Piper', 'M600', 'T0123', 6),
         (11, 'G-UVWX', 'Boeing', '747-400', 'T1357', 416),
         (12, 'N-YZAB', 'Airbus', 'A220-300', 'T2468', 141),
         (13, 'F-CDEF', 'Cessna', 'Skyhawk 172', 'T3579', 4),
@@ -147,7 +147,7 @@ def setup_test_data():
         (7, 'Cape Town International', 'South Africa', 'CPT', 6015),
         (8, 'Toronto Pearson', 'Canada', 'YYZ', 3557),
         (9, 'Frankfurt Airport', 'Germany', 'FRA', 406),
-        (10, 'São Paulo Guarulhos', 'Brazil', 'GRU', 5921)
+        (10, 'São Paulo Guarulhos', 'Brazil', 'GRU', 5921),
         (11, 'Los Angeles International', 'United States', 'LAX', 8757),
         (12, 'Hong Kong International', 'Hong Kong', 'HKG', 5990),
         (13, 'Amsterdam Schiphol', 'Netherlands', 'AMS', 356),
@@ -169,7 +169,7 @@ def setup_test_data():
         (7, 'Singapore Airlines', 'SQ', '2' ),
         (8, 'Air Canada', 'AC', '2' ),
         (9, 'KLM Royal Dutch', 'KL', '4' ),
-        (10, 'Qantas', 'QF', '3' )
+        (10, 'Qantas', 'QF', '3' ),
         (11, 'Delta Air Lines', 'DL', '4'),
         (12, 'Turkish Airlines', 'TK', '3'),
         (13, 'Etihad Airways', 'EY', '4'),

@@ -33,19 +33,19 @@ def show_destinations():
 def add_destinations(name, country, airportCode,distanceFromLondon):
     logging.info("Adding a Destination.")
     add_record(
-    table_name="Airline",
+    table_name="Destination",
     column_names=["Name", "Country", "AirportCode","DistanceFromLondon"],
     values=(name, country, airportCode,distanceFromLondon))
 
 
 def show_airplanes():
     logging.info("Showing all Planes.")
-    show_records("Planes")
+    show_records("Plane")
 
 def add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity):
     logging.info("Adding a Plane.")
     add_record(
-    table_name="Planes",
+    table_name="Plane",
     column_names=["AircraftRegistrationNumber", "Manufacturer", "Model","TailNumber","Capacity"],
     values=(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity))
 

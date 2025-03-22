@@ -63,7 +63,6 @@ def airplane_management_menu():
             capacity = input("Enter the airplane's capacity: ")            
             databaseUtil.add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity)
         elif choice == "2":
-            logging.info("Viewing all airplanes.")
             databaseUtil.show_airplanes()
         elif choice.upper() == "X":
             break
@@ -84,7 +83,7 @@ def destination_management_menu():
             country = input("Enter the destination's country: ")
             airportCode = input("Enter the destination's airport code: ")
             distanceFromLondon = input("Enter the destination's distance from London: ")            
-            databaseUtil.show_destinations(name, country, airportCode,distanceFromLondon)
+            databaseUtil.add_destinations(name, country, airportCode,distanceFromLondon)
         elif choice == "2":
             databaseUtil.show_destinations()
         elif choice.upper() == "X":
