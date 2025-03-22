@@ -146,7 +146,7 @@ def flight_management_menu():
             # Placeholder for updating a flight            
         elif choice == "4":
             logging.info("Viewing flights.")
-            # Placeholder for viewing pilots logic
+            databaseUtil.show_flights()
         elif choice.upper() == "X":
             break
         else:

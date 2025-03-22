@@ -8,9 +8,9 @@ def show_pilots():
     logging.info("Showing all Pilots.")    
     show_records("Pilot")
 
-def show_pilot_schedule():
+def show_pilot_schedule(pilotId):
     logging.info("Showing Pilot schedule.")    
-    show_schedule("Pilot")
+    show_schedule(pilotId)
 
 def add_pilot(name, surname, licenseNumber):
     logging.info("Adding a Pilot.")
@@ -61,6 +61,11 @@ def add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capaci
     table_name="Plane",
     column_names=["AircraftRegistrationNumber", "Manufacturer", "Model","TailNumber","Capacity"],
     values=(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity))
+
+# Flights section
+def show_flights():
+    logging.info("Showing all Flights.")
+    show_records("FlightDetails")
 
 # Generic CRUD section
 def add_record(table_name, column_names, values):

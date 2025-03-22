@@ -1,5 +1,6 @@
 # Creates the temporary database and populates it with sample data 
 import datetime
+import random
 import logging
 import sqlite3
 import config
@@ -152,7 +153,8 @@ def setup_test_data():
         (12, 'Hong Kong International', 'Hong Kong', 'HKG', 5990),
         (13, 'Amsterdam Schiphol', 'Netherlands', 'AMS', 356),
         (14, 'Madrid Barajas', 'Spain', 'MAD', 785),
-        (15, 'Mexico City International', 'Mexico', 'MEX', 5533)
+        (15, 'Mexico City International', 'Mexico', 'MEX', 5533),
+        (16, 'Heathrow Airport', 'UK', 'LHR', 0)
     ])    
 
     # Insert sample records into the Airline table
@@ -177,5 +179,56 @@ def setup_test_data():
         (15, 'Swiss International Air Lines', 'LX', '2')
     ])
 
+    # Generate 15 sample records for FlightDetails
+    sample_flight_details = []
+
+    for flight_id in range(1, 16):
+        flight_name = f"Flight-{flight_id:03}"  # Example: Flight-001, Flight-002, etc.
+        pilot_id = random.randint(1, 15)  # Random PilotID from 1 to 15
+        plane_id = random.randint(1, 15)  # Random PlaneID from 1 to 15
+        origin_id = 16                    # London Heathrow Airport is the hub and all flights originate from it
+        destination_id = random.randint(1, 15)  # Random DestinationID from 1 to 15
+
+        scheduled_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d %H:%M:%S")
+        actual_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30), hours=random.randint(0, 3))).strftime("%Y-%m-%d %H:%M:%S")
+        """
+        I should calculate the duration based on the destination distance
+        """
+        duration_minutes = random.randint(30, 720)  # Random duration from 30 minutes to 12 hours
+        """
+        The terminal should be coming from the airline
+        """        
+        terminal = random.choice(["1", "2", "3", "4", "5"])
+        
+        gate = random.choice(["A", "B", "C", "D"]) + str(random.randint(1, 10))  # Example: A3, B5, etc.
+        airline = random.choice(["British Airways", "Virgin Atlantic", "Lufthansa", "Emirates", "Qatar Airways"])
+
+        # Add record to the list
+        sample_flight_details.append((
+            flight_id,
+            flight_name,
+            pilot_id,
+            plane_id,
+            origin_id,
+            destination_id,
+            scheduled_date,
+            actual_date,
+            duration_minutes,
+            terminal,
+            gate,
+            airline
+        ))
+
+    # Insert records into the FlightDetails table
+    cursor.executemany("""
+        INSERT INTO FlightDetails (
+            FlightID, FlightName, PilotID, PlaneID, OriginID, DestinationID, 
+            ScheduledFlightDate, ActualFlightDate, DurationMinutes, Terminal, Gate, Airline
+        ) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """, sample_flight_details)
+
     conn.commit()
     conn.close()
+
+    print("15 sample records added to the FlightDetails table.")
