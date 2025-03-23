@@ -1,4 +1,9 @@
+import os
+import sys
 import pytest
+
+print(sys.path)
+
 import src.setupdatabase as db
 
 # Called before  any tests are run
