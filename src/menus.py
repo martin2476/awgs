@@ -16,6 +16,7 @@ def pilot_management_menu():
         print("3. Delete Pilot")
         print("4. View Pilots")
         print("5. View Pilot Schedule")
+        print("6. View All Pilots Schedules")
         print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -36,6 +37,8 @@ def pilot_management_menu():
         elif choice == "5":
             pilotId = input("Enter the pilot's id: ")
             pilots.show_pilot_schedule(pilotId)
+        elif choice == "6":
+            pilots.show_all_pilots_schedule()
         elif choice.upper() == "X":
             break
         else:
