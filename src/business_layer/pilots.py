@@ -96,7 +96,10 @@ def show_all_pilots_schedule():
             for row in rows:
                 data = get_pilot_schedule(int(row[0]))
                 print(f'Pilot: {row[1]} {row[2]}')
-                print(tabulate(data, headers="keys", tablefmt="grid"))
+                if not data:
+                    print("This pilot has no flights.")
+                else:
+                    print(tabulate(data, headers="keys", tablefmt="grid"))
                 print()
 
 
