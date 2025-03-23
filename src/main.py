@@ -9,7 +9,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
     )
     
-
 # Sample log messages
 # logging.debug("This is a DEBUG message.")
 # logging.info("This is an INFO message.")

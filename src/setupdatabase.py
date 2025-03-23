@@ -77,16 +77,17 @@ def setup_database():
                  PlaneID INTEGER,                    -- Link to the plane
                  OriginID INTEGER,                   -- Link to the origin destination
                  DestinationID INTEGER,              -- Link to the destination
-                 ScheduledFlightDate TEXT,                    -- Scheduled Date / Time of the flight (ISO-8601 format)
-                 ActualFlightDate TEXT,                    -- Actual Date / Time of the flight (ISO-8601 format)
+                 ScheduledFlightDate TEXT,           -- Scheduled Date / Time of the flight (ISO-8601 format)
+                 ActualFlightDate TEXT,              -- Actual Date / Time of the flight (ISO-8601 format)
                  DurationMinutes INTEGER,            -- Duration of the flight in minutes
                  Terminal TEXT,
                  Gate TEXT,
-                 Airline TEXT,                      -- The airline operating the flight
+                 AirlineID INTEGER,                      -- The airline operating the flight
                  FlightStatus TEXT,                      -- the current flight status - FlightStatus enum
-                 FOREIGN KEY (PlaneID) REFERENCES Planes(PlaneID),          -- Foreign key to Planes table
-                 FOREIGN KEY (OriginID) REFERENCES Destinations(DestinationID), -- Foreign key to Destinations table
-                 FOREIGN KEY (DestinationID) REFERENCES Destinations(DestinationID) -- Foreign key to Destinations table
+                 FOREIGN KEY (PlaneID) REFERENCES Planes(PlaneID),          -- Foreign key to Plane table
+                 FOREIGN KEY (OriginID) REFERENCES Destinations(DestinationID), -- Foreign key to Destination table
+                 FOREIGN KEY (DestinationID) REFERENCES Destinations(DestinationID) -- Foreign key to Destination table
+                 FOREIGN KEY (AirlineID) REFERENCES Airlines(AirlineID) -- Foreign key to Airline table
             );""")
     
     conn.commit()
@@ -215,8 +216,8 @@ def setup_test_data():
         terminal = random.choice(["1", "2", "3", "4", "5"])
         
         gate = random.choice(["A", "B", "C", "D"]) + str(random.randint(1, 10))  # Example: A3, B5, etc.
-        airline = random.choice(["British Airways", "Virgin Atlantic", "Lufthansa", "Emirates", "Qatar Airways"])
-
+        airlineID = random.randint(1, 15)  # Random DestinationID from 1 to 15
+        
         # Add record to the list
         sample_flight_details.append((
             flight_id,
@@ -229,7 +230,7 @@ def setup_test_data():
             duration_minutes,
             terminal,
             gate,
-            airline,
+            airlineID,
             util.FlightStatus.SCHEDULED.name
         ))
 
@@ -242,7 +243,7 @@ def setup_test_data():
     cursor.executemany("""
         INSERT INTO FlightDetails (
             FlightID, FlightName, PlaneID, OriginID, DestinationID, 
-            ScheduledFlightDate, ActualFlightDate, DurationMinutes, Terminal, Gate, Airline, FlightStatus
+            ScheduledFlightDate, ActualFlightDate, DurationMinutes, Terminal, Gate, AirlineID, FlightStatus
         ) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     """, sample_flight_details)

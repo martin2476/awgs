@@ -137,11 +137,21 @@ def show_records_for_flights(table_name, criteria=None):
             cursor = conn.cursor()
             
             # Construct query with optional criteria
-            if criteria:
-                query = f"SELECT * FROM FlightDetails WHERE {criteria}"
-            else:
-                query = f"SELECT * FROM {table_name}"
+            query = f"""SELECT FlightDetails.FlightName, Origin.Name, Destination.Name, FlightDetails.ScheduledFlightDate, 
+                        FlightDetails.Terminal, Airline.Name,FlightDetails.FlightStatus 
+                FROM FlightDetails
+                INNER JOIN Destination As Origin
+                ON FlightDetails.DestinationID = Origin.DestinationID
+                INNER JOIN Destination
+                ON FlightDetails.OriginID = Destination.DestinationID
+                INNER JOIN Airline
+                ON FlightDetails.AirlineID = Airline.AirlineID           
+                """
             
+            if criteria:
+                query = f"{query} WHERE {criteria}"
+
+
             cursor.execute(query)
             rows = cursor.fetchall()
             
@@ -149,7 +159,7 @@ def show_records_for_flights(table_name, criteria=None):
             for row in rows:
                 print(f"{table_name} Record: {row}")
             
-        logging.info(f"show_records completed successfully for table={table_name}, criteria={criteria}")
+        logging.info(f"show_records_for_flights completed successfully for table={table_name}, criteria={criteria}")
 
     except sqlite3.Error as e:
         # Log database-specific errors
