@@ -1,6 +1,11 @@
 import logging
 import databaseUtil
 import util
+import business_layer.pilots as pilots
+import business_layer.airlines as airlines
+import business_layer.airplanes as airplanes
+import business_layer.destinations as destinations
+import business_layer.flights as flights
 
 @util.log_function_call
 def pilot_management_menu():
@@ -19,18 +24,18 @@ def pilot_management_menu():
             name = input("Enter the pilot's first name: ")
             surname = input("Enter the pilot's surname: ")
             licenseNumber = input("Enter the pilot's license number: ")
-            databaseUtil.add_pilot(name,surname,licenseNumber)
+            pilots.add_pilot(name,surname,licenseNumber)
         elif choice == "2":
             pilotId = input("Enter the pilot's id: ")
-            databaseUtil.amend_pilot(pilotId)
+            pilots.amend_pilot(pilotId)
         elif choice == "3":
             pilotId = input("Enter the pilot's id: ")
-            databaseUtil.delete_pilot(pilotId)
+            pilots.delete_pilot(pilotId)
         elif choice == "4":
-            databaseUtil.show_pilots()
+            pilots.show_pilots()
         elif choice == "5":
             pilotId = input("Enter the pilot's id: ")
-            databaseUtil.show_pilot_schedule(pilotId)
+            pilots.show_pilot_schedule(pilotId)
         elif choice.upper() == "X":
             break
         else:
@@ -52,19 +57,20 @@ def airline_management_menu():
             name = input("Enter the airline's name: ")
             iataCode = input("Enter the airline's IATA code: ")
             terminal = input("Enter the airline's terminal: ")
-            databaseUtil.add_airline(name,iataCode,terminal)
+            airlines.add_airline(name,iataCode,terminal)
         elif choice == "2":
             airlineId = input("Enter the Airline's id: ")
-            databaseUtil.delete_airline(airlineId)
+            airlines.delete_airline(airlineId)
         elif choice == "3":
             airlineId = input("Enter the Airlines's id: ")
-            databaseUtil.amend_airline(airlineId)
+            airlines.amend_airline(airlineId)
         elif choice == "4":
-            databaseUtil.show_airlines()                  
+            airlines.show_airlines()                  
         elif choice.upper() == "X":
             break
         else:
             print("Invalid choice. Please try again.")
+
 @util.log_function_call
 def airplane_management_menu():
     while True:
@@ -83,15 +89,15 @@ def airplane_management_menu():
             model = input("Enter the airplane's model: ")
             tailNumber = input("Enter the airplane's tail number: ")            
             capacity = input("Enter the airplane's capacity: ")            
-            databaseUtil.add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity)
+            airplanes.add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity)
         elif choice == "2":
             airplaneId = input("Enter the Airplane's id: ")
-            databaseUtil.amend_airplane(airplaneId)    
+            airplanes.amend_airplane(airplaneId)    
         elif choice == "3":
             airplaneId = input("Enter the Airplane's id: ")
-            databaseUtil.delete_airplane(airplaneId)
+            airplanes.delete_airplane(airplaneId)
         elif choice == "4":
-            databaseUtil.show_airplanes()
+            airplanes.show_airplanes()
         elif choice.upper() == "X":
             break
         else:
@@ -114,15 +120,15 @@ def destination_management_menu():
             country = input("Enter the destination's country: ")
             airportCode = input("Enter the destination's airport code: ")
             distanceFromLondon = input("Enter the destination's distance from London: ")            
-            databaseUtil.add_destinations(name, country, airportCode,distanceFromLondon)
+            destinations.add_destinations(name, country, airportCode,distanceFromLondon)
         elif choice == "2":
             destinationId = input("Enter the Destination's id: ")
-            databaseUtil.amend_destination(destinationId)      
+            destinations.amend_destination(destinationId)      
         elif choice == "3":
             destinationId = input("Enter the Destination's id: ")
-            databaseUtil.delete_destination(destinationId)
+            destinations.delete_destination(destinationId)
         elif choice == "4":
-            databaseUtil.show_destinations()
+            destinations.show_destinations()
         elif choice.upper() == "X":
             break
         else:
@@ -153,7 +159,8 @@ def flight_management_menu():
             flightDestination = input("Enter the Flight's destination: ")
             flightTerminal =  input("Enter the Flight's terminal: ")
             flightDate =  input("Enter the Flight's date: ")
-            databaseUtil.show_flights(flightName,flightDestination,flightTerminal,flightDate)
+            flightAirline =  input("Enter the Flight's Airline: ")
+            flights.show_flights(flightName,flightDestination,flightTerminal,flightDate,flightAirline)
         elif choice.upper() == "X":
             break
         else:
@@ -177,24 +184,24 @@ def update_flight_menu():
             for status in util.FlightStatus:
                 print(f"{status.name} = {status.value}")
             statusId = input("Enter the Flight's status: ")
-            databaseUtil.update_flight_status(flightId, util.FlightStatus(int(statusId)).name)
+            flights.update_flight_status(flightId, util.FlightStatus(int(statusId)).name)
         elif choice == "2":
             #print out the pilots
             flightId = input("Enter the Flight's id: ")
             pilotId  = input("Enter the Pilot's id: ")
-            databaseUtil.update_flight_pilot(flightId,pilotId)
+            flights.update_flight_pilot(flightId,pilotId)
         elif choice == "3":
 #scheduled_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d %H:%M:%S")
             flightId = input("Enter the Flight's id: ")
             statusId = input("Enter the Flight's status: ")
-            databaseUtil.change_flight_status(flightId, util.FlightStatus(int(statusId)).name)
+            flights.change_flight_status(flightId, util.FlightStatus(int(statusId)).name)
         elif choice == "4":
             pass
         elif choice == "5":
 #scheduled_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d %H:%M:%S")
             flightId = input("Enter the Flight's id: ")
             gateNumber = input("Enter the gate number: ")
-            databaseUtil.update_flight_gate(flightId, gateNumber)
+            flights.update_flight_gate(flightId, gateNumber)
         elif choice.upper() == "X":
             break
         else:

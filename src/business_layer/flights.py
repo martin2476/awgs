@@ -8,7 +8,7 @@ import config
 import databaseUtil
 
 @util.log_function_call
-def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None):
+def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None, flightAirline=None):
     
     # Build selection criteria dynamically
     criteria = []
@@ -20,12 +20,21 @@ def show_flights(flightName=None, flightDestination=None, flightTerminal=None, f
         criteria.append(f"Terminal = '{flightTerminal}'")
     if flightDate:
         criteria.append(f"ScheduledFlightDate = '{flightDate}'")
-    
+    if flightAirline:
+        criteria.append(f"Airline = '{flightAirline}'")
+
     # Join criteria with AND keyword if any exist
     query_criteria = " AND ".join(criteria) if criteria else None
     
     # Fetch records with optional criteria
-    databaseUtil.show_records("FlightDetails", query_criteria)
+    databaseUtil.show_records_for_flights("FlightDetails", query_criteria)
+
+    
+
+
+
+
+
 
 def update_flight_status(flightId,status):
     update_flight_record("FlightDetails", "FlightStatus", status, "FlightID", flightId)

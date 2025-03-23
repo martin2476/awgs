@@ -84,7 +84,6 @@ def delete_record(table_name, condition, params=()):
     finally:
         logging.info("delete_record completed.")
 
-
 @util.log_function_call
 def show_records(table_name, criteria=None):
     """
@@ -102,6 +101,44 @@ def show_records(table_name, criteria=None):
             # Construct query with optional criteria
             if criteria:
                 query = f"SELECT * FROM {table_name} WHERE {criteria}"
+            else:
+                query = f"SELECT * FROM {table_name}"
+            
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            
+            # Use descriptive messages while printing
+            for row in rows:
+                print(f"{table_name} Record: {row}")
+            
+        logging.info(f"show_records completed successfully for table={table_name}, criteria={criteria}")
+
+    except sqlite3.Error as e:
+        # Log database-specific errors
+        logging.error(f"Database error occurred while fetching records from {table_name}: {e}")
+    
+    except Exception as e:
+        # Handle unexpected errors
+        logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
+
+
+@util.log_function_call
+def show_records_for_flights(table_name, criteria=None):
+    """
+    A generic function to fetch and display records from any specified database table with optional selection criteria.
+
+    Args:
+    - table_name (str): Name of the table to fetch records from.
+    - criteria (str, optional): SQL WHERE clause for filtering records. Default is None.
+    """
+    try:
+        # Use a context manager for safe connection handling
+        with sqlite3.connect(config.DATABASE_NAME) as conn:
+            cursor = conn.cursor()
+            
+            # Construct query with optional criteria
+            if criteria:
+                query = f"SELECT * FROM FlightDetails WHERE {criteria}"
             else:
                 query = f"SELECT * FROM {table_name}"
             
