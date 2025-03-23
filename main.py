@@ -1,4 +1,3 @@
-import datetime
 import logging
 import menus
 import setupdatabase as sd
@@ -8,7 +7,8 @@ import setupdatabase as sd
 logging.basicConfig(
     level=logging.WARNING,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
     format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
-)
+    )
+    
 
 # Sample log messages
 # logging.debug("This is a DEBUG message.")
@@ -17,14 +17,7 @@ logging.basicConfig(
 # logging.error("This is an ERROR message.")
 # logging.critical("This is a CRITICAL message.")
 
-
-
-
-def show_date_time():
-    now = datetime.datetime.now()
-    print(f"\nThe current date and time is: {now}")
-
-
+    
 def main():
 
     sd.cleanup_database()
