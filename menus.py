@@ -2,6 +2,7 @@ import logging
 import databaseUtil
 import util
 
+@util.log_function_call
 def pilot_management_menu():
     while True:
         print("\n=== Pilot Management Menu ===")
@@ -35,6 +36,7 @@ def pilot_management_menu():
         else:
             print("Invalid choice. Please try again.")
 
+@util.log_function_call
 def airline_management_menu():
     while True:
         print("\n=== Airline Management Menu ===")
@@ -63,7 +65,7 @@ def airline_management_menu():
             break
         else:
             print("Invalid choice. Please try again.")
-
+@util.log_function_call
 def airplane_management_menu():
     while True:
         print("\n=== Airplane Management Menu ===")
@@ -95,6 +97,7 @@ def airplane_management_menu():
         else:
             print("Invalid choice. Please try again.")            
 
+@util.log_function_call
 def destination_management_menu():
     while True:
         print("\n=== Destination Management Menu ===")
@@ -125,6 +128,7 @@ def destination_management_menu():
         else:
             print("Invalid choice. Please try again.")                
 
+@util.log_function_call
 def flight_management_menu():
     while True:
         print("\n=== Flight Management Menu ===")
@@ -155,6 +159,7 @@ def flight_management_menu():
         else:
             print("Invalid choice. Please try again.")            
 
+@util.log_function_call
 def update_flight_menu():
     while True:
         print("\n=== Update Flight Menu ===")
@@ -195,6 +200,7 @@ def update_flight_menu():
         else:
             print("Invalid choice. Please try again.")
 
+@util.log_function_call
 def reporting_menu():
     while True:
         print("\n=== Reporting Menu ===")

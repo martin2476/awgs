@@ -1,160 +1,11 @@
 import logging
 import sqlite3
 import config
+import util
 
-# Pilot section
-
-def show_pilots():
-    logging.info("Showing all Pilots.")    
-    show_records("Pilot")
-
-def show_pilot_schedule(pilotId):
-    logging.info("Showing Pilot schedule.")    
-    show_schedule(pilotId)
-
-def add_pilot(name, surname, licenseNumber):
-    logging.info("Adding a Pilot.")
-    add_record(
-    table_name="Pilot",
-    column_names=["Name", "Surname", "LicenseNumber"],
-    values=(name, surname, licenseNumber))
-
-def delete_pilot(pilotId):
-    logging.info("Deleting a Pilot.")
-    delete_record("Pilot","pilotID = ?", (pilotId,))
-
-def amend_pilot(pilotId):
-    pass
-
-# Airline section
-def show_airlines():
-    logging.info("Showing all Airlines.")    
-    show_records("Airline")
-
-def add_airline(name, iataCode, terminal):
-    logging.info("Adding an Airline.")    
-    add_record(
-    table_name="Airline",
-    column_names=["Name", "IATACode", "Terminal"],
-    values=(name, iataCode, terminal))
-
-# Destination section
-def show_destinations():
-    logging.info("Showing all Destinations.")
-    show_records("Destination")
-
-def add_destinations(name, country, airportCode,distanceFromLondon):
-    logging.info("Adding a Destination.")
-    add_record(
-    table_name="Destination",
-    column_names=["Name", "Country", "AirportCode","DistanceFromLondon"],
-    values=(name, country, airportCode,distanceFromLondon))
-
-# Airplane section
-def show_airplanes():
-    logging.info("Showing all Planes.")
-    show_records("Plane")
-
-def add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity):
-    logging.info("Adding a Plane.")
-    add_record(
-    table_name="Plane",
-    column_names=["AircraftRegistrationNumber", "Manufacturer", "Model","TailNumber","Capacity"],
-    values=(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity))
-
-# Flights section
-def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None):
-    logging.info("Showing all Flights.")
-    
-    # Build selection criteria dynamically
-    criteria = []
-    if flightName:
-        criteria.append(f"FlightName = '{flightName}'")
-    if flightDestination:
-        criteria.append(f"DestinationID = '{flightDestination}'")
-    if flightTerminal:
-        criteria.append(f"Terminal = '{flightTerminal}'")
-    if flightDate:
-        criteria.append(f"ScheduledFlightDate = '{flightDate}'")
-    
-    # Join criteria with AND keyword if any exist
-    query_criteria = " AND ".join(criteria) if criteria else None
-    
-    # Fetch records with optional criteria
-    show_records("FlightDetails", query_criteria)
-
-def update_flight_status(flightId,status):
-    update_flight_record("FlightDetails", "FlightStatus", status, "FlightID", flightId)
-
-def update_flight_gate(flightId,gate):
-    update_flight_record("FlightDetails", "FlightStatus", gate, "FlightID", flightId)
-
-def update_flight_pilot(flightId,pilotId):
-    try:
-        # Connect to the database using a context manager
-        with sqlite3.connect(config.DATABASE_NAME) as conn:
-            cursor = conn.cursor()
-
-        pilot_flight_details = []
-        cursor.executemany("""
-        INSERT INTO FlightPilots (FlightID, PilotID) 
-        VALUES (?, ?);
-    """, pilot_flight_details)
-        
-    except sqlite3.IntegrityError as e:
-        logging.error(f"Integrity error while updating record in FlightPilots: {e}")
-    
-    except sqlite3.Error as e:
-        logging.error(f"Database error occurred while updating record in FlightPilots: {e}")
-    
-    except Exception as e:
-        logging.error(f"Unexpected error occurred while updating record in FlightPilots: {e}")
-    
-    finally:
-        logging.info("update_record completed.")
-
-
-def update_flight_record(table_name, column_name, value, condition_column, condition_value):
-    """
-    A generic function to update a specific column in a table based on a condition.
-
-    Args:
-    - table_name (str): The name of the table to update.
-    - column_name (str): The column to update.
-    - value: The new value to set (can be a string, integer, etc.).
-    - condition_column (str): The column to use in the WHERE clause.
-    - condition_value: The value for the WHERE clause to match.
-
-    Example Usage:
-    update_record("FlightDetails", "FlightStatus", "LANDED", "FlightID", 1)
-    """
-    logging.info(f"Updating {column_name} in {table_name} where {condition_column} = {condition_value}.")
-    try:
-        # Connect to the database using a context manager
-        with sqlite3.connect(config.DATABASE_NAME) as conn:
-            cursor = conn.cursor()
-            
-            # Construct the SQL query dynamically
-            query = f"UPDATE {table_name} SET {column_name} = ? WHERE {condition_column} = ?;"
-            cursor.execute(query, (value, condition_value))
-            
-            # Commit the transaction
-            conn.commit()
-            logging.info(f"Record updated successfully in {table_name}: {column_name} set to {value} where {condition_column} = {condition_value}.")
-    
-    except sqlite3.IntegrityError as e:
-        logging.error(f"Integrity error while updating record in {table_name}: {e}")
-    
-    except sqlite3.Error as e:
-        logging.error(f"Database error occurred while updating record in {table_name}: {e}")
-    
-    except Exception as e:
-        logging.error(f"Unexpected error occurred while updating record in {table_name}: {e}")
-    
-    finally:
-        logging.info("update_record completed.")
 
 # Generic CRUD section
+@util.log_function_call
 def add_record(table_name, column_names, values):
     """
     A generic function to insert records into any table in the database.
@@ -165,8 +16,6 @@ def add_record(table_name, column_names, values):
     - values (tuple): Tuple of values corresponding to the columns.
 
     """
-    logging.info(f"add_record started for table={table_name} with values={values}")
-    
     try:
         # Connect to the database using a context manager
         with sqlite3.connect(config.DATABASE_NAME) as conn:
@@ -199,6 +48,7 @@ def add_record(table_name, column_names, values):
     finally:
         logging.info(f"add_record completed for table={table_name}")
 
+@util.log_function_call
 def delete_record(table_name, condition, params=()):
     """
     A generic function to delete a record from any SQLite table.
@@ -210,8 +60,6 @@ def delete_record(table_name, condition, params=()):
     Example Usage:
     delete_record("Pilot", "PilotID = 3")
     """
-    logging.info(f"delete_record started for table={table_name} with condition={condition}")
-
     try:
         # Use a context manager to safely handle the connection
         with sqlite3.connect(config.DATABASE_NAME) as conn:
@@ -237,6 +85,7 @@ def delete_record(table_name, condition, params=()):
         logging.info("delete_record completed.")
 
 
+@util.log_function_call
 def show_records(table_name, criteria=None):
     """
     A generic function to fetch and display records from any specified database table with optional selection criteria.
@@ -245,8 +94,6 @@ def show_records(table_name, criteria=None):
     - table_name (str): Name of the table to fetch records from.
     - criteria (str, optional): SQL WHERE clause for filtering records. Default is None.
     """
-    logging.info(f"show_records started for table={table_name}, criteria={criteria}")
-
     try:
         # Use a context manager for safe connection handling
         with sqlite3.connect(config.DATABASE_NAME) as conn:
@@ -276,29 +123,4 @@ def show_records(table_name, criteria=None):
         logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
 
 
-def show_schedule(pilotId):
-    logging.info(f"show_schedule started")
-    
-    try:
-        # Use a context manager for safe connection handling
-        with sqlite3.connect(config.DATABASE_NAME) as conn:
-            cursor = conn.cursor()
-            
-            # Dynamically construct the query
-            query = f"SELECT * FROM FlightDetails where pilotId = {pilotId}"
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            
-            # Use descriptive messages while printing
-            for row in rows:
-                print(f"Record: {row}")
-                
-        logging.info(f"show_schedule completed successfully")
-    
-    except sqlite3.Error as e:
-        # Log database-specific errors
-        logging.error(f"Database error occurred while fetching records from FlightDetails: {e}")
-    
-    except Exception as e:
-        # Handle unexpected errors
-        logging.error(f"Unexpected error occurred while fetching records from FlightDetails: {e}")        
+  
