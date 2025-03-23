@@ -4,9 +4,15 @@
 import util
 import databaseUtil
 
+from tabulate import tabulate
+
 @util.log_function_call
 def show_destinations():
-    databaseUtil.show_records("Destination")
+    records = databaseUtil.show_records("Destination")
+    if records:
+        print(tabulate(records, headers="keys", tablefmt="grid"))
+    else:
+        print("No records found.")    
 
 @util.log_function_call
 def add_destinations(name, country, airportCode,distanceFromLondon):

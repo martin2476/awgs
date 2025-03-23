@@ -4,9 +4,15 @@
 import util
 import databaseUtil
 
+from tabulate import tabulate
+
 @util.log_function_call
 def show_airlines():
-    databaseUtil.show_records("Airline")
+    records = databaseUtil.show_records("Airline")
+    if records:
+        print(tabulate(records, headers="keys", tablefmt="grid"))
+    else:
+        print("No records found.")        
 
 @util.log_function_call
 def add_airline(name, iataCode, terminal):

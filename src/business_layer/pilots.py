@@ -11,7 +11,12 @@ from tabulate import tabulate
 
 @util.log_function_call
 def show_pilots():
-    databaseUtil.show_records("Pilot")
+    records = databaseUtil.show_records("Pilot")
+    if records:
+        print(tabulate(records, headers="keys", tablefmt="grid"))
+    else:
+        print("No records found.")
+        
 
 @util.log_function_call
 def add_pilot(name, surname, licenseNumber):
@@ -88,7 +93,7 @@ def show_all_pilots_schedule():
         # Use a context manager for safe connection handling
         with sqlite3.connect(config.DATABASE_NAME) as conn:
             cursor = conn.cursor()
-            query = f"SELECT PilotID, Name, Surname FROM Pilot"            
+            query = f"SELECT PilotID, Name, Surname FROM Pilot"
             cursor.execute(query)
             rows = cursor.fetchall()
             
@@ -101,7 +106,6 @@ def show_all_pilots_schedule():
                 else:
                     print(tabulate(data, headers="keys", tablefmt="grid"))
                 print()
-
 
     except sqlite3.Error as e:
         # Log database-specific errors

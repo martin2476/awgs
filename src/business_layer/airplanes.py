@@ -4,9 +4,15 @@
 import util
 import databaseUtil
 
+from tabulate import tabulate
+
 @util.log_function_call
 def show_airplanes():
-    databaseUtil.show_records("Plane")
+    records = databaseUtil.show_records("Plane")
+    if records:
+        print(tabulate(records, headers="keys", tablefmt="grid"))
+    else:
+        print("No records found.")
 
 @util.log_function_call
 def add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity):

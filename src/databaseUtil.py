@@ -106,12 +106,15 @@ def show_records(table_name, criteria=None):
             
             cursor.execute(query)
             rows = cursor.fetchall()
-            
-            # Use descriptive messages while printing
-            for row in rows:
-                print(f"{table_name} Record: {row}")
+            column_names = [description[0] for description in cursor.description]
+
+            result = [
+                {column_names[index]: value for index, value in enumerate(row)}
+                for row in rows
+            ]
             
         logging.info(f"show_records completed successfully for table={table_name}, criteria={criteria}")
+        return result
 
     except sqlite3.Error as e:
         # Log database-specific errors
@@ -150,7 +153,6 @@ def show_records_for_flights(table_name, criteria=None):
             
             if criteria:
                 query = f"{query} WHERE {criteria}"
-
 
             cursor.execute(query)
             rows = cursor.fetchall()
