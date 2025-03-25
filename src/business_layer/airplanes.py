@@ -2,13 +2,13 @@
     Contains all functions related to Airplanes functionality
 '''
 import util
-import databaseUtil
+import src.databaseDAO as databaseDAO
 
 from tabulate import tabulate
 
 @util.log_function_call
 def show_airplanes():
-    records = databaseUtil.get_records("Plane")
+    records = databaseDAO.get_records("Plane")
     if records:
         print(tabulate(records, headers="keys", tablefmt="grid"))
     else:
@@ -16,7 +16,7 @@ def show_airplanes():
 
 @util.log_function_call
 def add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity):
-    databaseUtil.add_record(
+    databaseDAO.add_record(
     table_name="Plane",
     column_names=["AircraftRegistrationNumber", "Manufacturer", "Model","TailNumber","Capacity"],
     values=(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity))

@@ -4,14 +4,14 @@
 import logging
 import sqlite3
 import config
-import databaseUtil
+import src.databaseDAO as databaseDAO
 import util
 
 from tabulate import tabulate
 
 @util.log_function_call
 def show_pilots():
-    records = databaseUtil.get_records("Pilot")
+    records = databaseDAO.get_records("Pilot")
     if records:
         print(tabulate(records, headers="keys", tablefmt="grid"))
     else:
@@ -20,14 +20,14 @@ def show_pilots():
 
 @util.log_function_call
 def add_pilot(name, surname, licenseNumber):
-    databaseUtil.add_record(
+    databaseDAO.add_record(
     table_name="Pilot",
     column_names=["Name", "Surname", "LicenseNumber"],
     values=(name, surname, licenseNumber))
 
 @util.log_function_call
 def delete_pilot(pilotId):
-    databaseUtil.delete_record("Pilot","pilotID = ?", (pilotId,))
+    databaseDAO.delete_record("Pilot","pilotID = ?", (pilotId,))
 
 @util.log_function_call    
 def amend_pilot(pilotId):
@@ -35,7 +35,7 @@ def amend_pilot(pilotId):
 
 @util.log_function_call
 def show_pilot_schedule(pilotId):
-    data = databaseUtil.get_pilot_schedule(pilotId)
+    data = databaseDAO.get_pilot_schedule(pilotId)
     print(tabulate(data, headers="keys", tablefmt="grid"))
 
 @util.log_function_call

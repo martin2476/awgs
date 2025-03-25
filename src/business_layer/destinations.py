@@ -2,13 +2,13 @@
     Contains all functions related to Destinations functionality
 '''
 import util
-import databaseUtil
+import src.databaseDAO as databaseDAO
 
 from tabulate import tabulate
 
 @util.log_function_call
 def show_destinations():
-    records = databaseUtil.get_records("Destination")
+    records = databaseDAO.get_records("Destination")
     if records:
         print(tabulate(records, headers="keys", tablefmt="grid"))
     else:
@@ -16,7 +16,7 @@ def show_destinations():
 
 @util.log_function_call
 def add_destinations(name, country, airportCode,distanceFromLondon):
-    databaseUtil.add_record(
+    databaseDAO.add_record(
     table_name="Destination",
     column_names=["Name", "Country", "AirportCode","DistanceFromLondon"],
     values=(name, country, airportCode,distanceFromLondon))

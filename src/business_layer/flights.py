@@ -5,7 +5,7 @@ import util
 import logging
 import sqlite3
 import config
-import databaseUtil
+import src.databaseDAO as databaseDAO
 
 from tabulate import tabulate
 
@@ -29,7 +29,7 @@ def show_flights(flightName=None, flightDestination=None, flightTerminal=None, f
     query_criteria = " AND ".join(criteria) if criteria else None
     
     # Fetch records with optional criteria
-    data = databaseUtil.get_flights_records("FlightDetails", query_criteria)
+    data = databaseDAO.get_flights_records("FlightDetails", query_criteria)
     print(tabulate(data, headers="keys", tablefmt="grid"))
 
 @util.log_function_call

@@ -2,7 +2,7 @@ import sqlite3
 import logging
 import src.util as util
 import src.config as config
-import src.databaseUtil as du
+import src.databaseDAO as du
 
 logging.basicConfig(
     level=logging.WARNING,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
