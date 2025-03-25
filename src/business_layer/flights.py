@@ -7,6 +7,8 @@ import sqlite3
 import config
 import databaseUtil
 
+from tabulate import tabulate
+
 @util.log_function_call
 def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None, flightAirline=None):
     
@@ -27,21 +29,18 @@ def show_flights(flightName=None, flightDestination=None, flightTerminal=None, f
     query_criteria = " AND ".join(criteria) if criteria else None
     
     # Fetch records with optional criteria
-    databaseUtil.show_records_for_flights("FlightDetails", query_criteria)
+    data = databaseUtil.get_flights_records("FlightDetails", query_criteria)
+    print(tabulate(data, headers="keys", tablefmt="grid"))
 
-    
-
-
-
-
-
-
+@util.log_function_call
 def update_flight_status(flightId,status):
     update_flight_record("FlightDetails", "FlightStatus", status, "FlightID", flightId)
 
+@util.log_function_call
 def update_flight_gate(flightId,gate):
     update_flight_record("FlightDetails", "FlightStatus", gate, "FlightID", flightId)
 
+@util.log_function_call
 def update_flight_pilot(flightId,pilotId):
     try:
         # Connect to the database using a context manager

@@ -8,7 +8,7 @@ from tabulate import tabulate
 
 @util.log_function_call
 def show_destinations():
-    records = databaseUtil.show_records("Destination")
+    records = databaseUtil.get_records("Destination")
     if records:
         print(tabulate(records, headers="keys", tablefmt="grid"))
     else:

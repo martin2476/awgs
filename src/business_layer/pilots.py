@@ -11,7 +11,7 @@ from tabulate import tabulate
 
 @util.log_function_call
 def show_pilots():
-    records = databaseUtil.show_records("Pilot")
+    records = databaseUtil.get_records("Pilot")
     if records:
         print(tabulate(records, headers="keys", tablefmt="grid"))
     else:
@@ -34,57 +34,8 @@ def amend_pilot(pilotId):
     pass
 
 @util.log_function_call
-def get_pilot_schedule(pilotId):
-    try:
-        # Use a context manager for safe connection handling
-        with sqlite3.connect(config.DATABASE_NAME) as conn:
-            cursor = conn.cursor()
-            
-            # Dynamically construct the query
-            # Construct query with optional criteria
-            query = f"""SELECT FlightDetails.FlightName, Origin.Name, Destination.Name, FlightDetails.ScheduledFlightDate, 
-                        FlightDetails.Terminal, Airline.Name,FlightDetails.FlightStatus 
-                FROM FlightPilots
-                INNER JOIN FlightDetails
-                ON FlightPilots.FlightID = FlightDetails.FlightID
-                INNER JOIN Destination As Origin
-                ON FlightDetails.DestinationID = Origin.DestinationID
-                INNER JOIN Destination
-                ON FlightDetails.OriginID = Destination.DestinationID
-                INNER JOIN Airline
-                ON FlightDetails.AirlineID = Airline.AirlineID
-                WHERE FlightPilots.PilotID = {pilotId}      
-                """
-            cursor.execute(query)
-            rows = cursor.fetchall()
-
-            # Structure the data as a list of dictionaries
-            result = []
-            for row in rows:
-                result.append({
-                    "Flight Name": row[0],
-                    "Origin": row[1],
-                    "Destination": row[2],
-                    "Scheduled Date": row[3],
-                    "Terminal": row[4],
-                    "Airline": row[5],
-                    "Status": row[6]
-                })
-
-        logging.info(f"show_schedule completed successfully")
-        return result
-    
-    except sqlite3.Error as e:
-        # Log database-specific errors
-        logging.error(f"Database error occurred while fetching records from FlightDetails: {e}")
-    
-    except Exception as e:
-        # Handle unexpected errors
-        logging.error(f"Unexpected error occurred while fetching records from FlightDetails: {e}")      
-
-@util.log_function_call
 def show_pilot_schedule(pilotId):
-    data = get_pilot_schedule(pilotId)
+    data = databaseUtil.get_pilot_schedule(pilotId)
     print(tabulate(data, headers="keys", tablefmt="grid"))
 
 @util.log_function_call

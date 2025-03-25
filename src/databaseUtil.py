@@ -85,7 +85,7 @@ def delete_record(table_name, condition, params=()):
         logging.info("delete_record completed.")
 
 @util.log_function_call
-def show_records(table_name, criteria=None):
+def get_records(table_name, criteria=None):
     """
     A generic function to fetch and display records from any specified database table with optional selection criteria.
 
@@ -124,9 +124,8 @@ def show_records(table_name, criteria=None):
         # Handle unexpected errors
         logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
 
-
 @util.log_function_call
-def show_records_for_flights(table_name, criteria=None):
+def get_flights_records(table_name, criteria=None):    
     """
     A generic function to fetch and display records from any specified database table with optional selection criteria.
 
@@ -156,12 +155,14 @@ def show_records_for_flights(table_name, criteria=None):
 
             cursor.execute(query)
             rows = cursor.fetchall()
+            column_names = [description[0] for description in cursor.description]
             
-            # Use descriptive messages while printing
-            for row in rows:
-                print(f"{table_name} Record: {row}")
+            result = [
+                {column_names[index]: value for index, value in enumerate(row)}
+                for row in rows
+            ]
             
-        logging.info(f"show_records_for_flights completed successfully for table={table_name}, criteria={criteria}")
+        return result
 
     except sqlite3.Error as e:
         # Log database-specific errors
@@ -172,4 +173,52 @@ def show_records_for_flights(table_name, criteria=None):
         logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
 
 
+@util.log_function_call
+def get_pilot_schedule(pilotId):
+    try:
+        # Use a context manager for safe connection handling
+        with sqlite3.connect(config.DATABASE_NAME) as conn:
+            cursor = conn.cursor()
+            
+            # Dynamically construct the query
+            # Construct query with optional criteria
+            query = f"""SELECT FlightDetails.FlightName, Origin.Name, Destination.Name, FlightDetails.ScheduledFlightDate, 
+                        FlightDetails.Terminal, Airline.Name,FlightDetails.FlightStatus 
+                FROM FlightPilots
+                INNER JOIN FlightDetails
+                ON FlightPilots.FlightID = FlightDetails.FlightID
+                INNER JOIN Destination As Origin
+                ON FlightDetails.DestinationID = Origin.DestinationID
+                INNER JOIN Destination
+                ON FlightDetails.OriginID = Destination.DestinationID
+                INNER JOIN Airline
+                ON FlightDetails.AirlineID = Airline.AirlineID
+                WHERE FlightPilots.PilotID = {pilotId}      
+                """
+            cursor.execute(query)
+            rows = cursor.fetchall()
+
+            # Structure the data as a list of dictionaries
+            result = []
+            for row in rows:
+                result.append({
+                    "Flight Name": row[0],
+                    "Origin": row[1],
+                    "Destination": row[2],
+                    "Scheduled Date": row[3],
+                    "Terminal": row[4],
+                    "Airline": row[5],
+                    "Status": row[6]
+                })
+
+        logging.info(f"show_schedule completed successfully")
+        return result
+    
+    except sqlite3.Error as e:
+        # Log database-specific errors
+        logging.error(f"Database error occurred while fetching records from FlightDetails: {e}")
+    
+    except Exception as e:
+        # Handle unexpected errors
+        logging.error(f"Unexpected error occurred while fetching records from FlightDetails: {e}")   
   
