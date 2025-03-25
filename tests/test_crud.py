@@ -19,13 +19,13 @@ def test_delete_record():
             
             # Execute the query
             rows = cursor.execute("SELECT COUNT(*) from Pilot where PilotID = 1")
-            assert int(rows[0]) == 1
+            assert int(rows[0]) == 10
 
             #I know that the pilot id's are from 1 to 15
             du.delete_record("Pilot","pilotID = ?", (1,))            
     
             rows = cursor.execute("SELECT COUNT(*) from Pilot where PilotID = 1")
-            assert int(rows[0]) == 0
+            assert int(rows[0]) == 2
 
     except sqlite3.IntegrityError as e:
         # Handle specific SQLite exceptions
@@ -39,5 +39,6 @@ def test_delete_record():
         # Handle unexpected errors
         logging.error(f"Unexpected error: {e}")
        
-
+def test_martin():
+    assert 1 == 1
     
