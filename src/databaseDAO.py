@@ -48,6 +48,46 @@ class DatabaseDAO:
             logging.info(f"add_record completed for table={table_name}")
 
     @log_function_call
+    def update_record(table_name, column_name, value, condition_column, condition_value):
+        """
+        A generic function to update a specific column in a table based on a condition.
+
+        Args:
+        - table_name (str): The name of the table to update.
+        - column_name (str): The column to update.
+        - value: The new value to set (can be a string, integer, etc.).
+        - condition_column (str): The column to use in the WHERE clause.
+        - condition_value: The value for the WHERE clause to match.
+
+        Example Usage:
+        update_record("FlightDetails", "FlightStatus", "LANDED", "FlightID", 1)
+        """
+        try:
+            # Connect to the database using a context manager
+            with sqlite3.connect(config.DATABASE_NAME) as conn:
+                cursor = conn.cursor()
+                
+                # Construct the SQL query dynamically
+                query = f"UPDATE {table_name} SET {column_name} = ? WHERE {condition_column} = ?;"
+                cursor.execute(query, (value, condition_value))
+                
+                # Commit the transaction
+                conn.commit()
+                logging.info(f"Record updated successfully in {table_name}: {column_name} set to {value} where {condition_column} = {condition_value}.")
+        
+        except sqlite3.IntegrityError as e:
+            logging.error(f"Integrity error while updating record in {table_name}: {e}")
+        
+        except sqlite3.Error as e:
+            logging.error(f"Database error occurred while updating record in {table_name}: {e}")
+        
+        except Exception as e:
+            logging.error(f"Unexpected error occurred while updating record in {table_name}: {e}")
+        
+        finally:
+            logging.info("update_record completed.")
+
+    @log_function_call
     def delete_record(table_name, condition, params=()):
         """
         A generic function to delete a record from any SQLite table.
@@ -123,6 +163,7 @@ class DatabaseDAO:
             # Handle unexpected errors
             logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
 
+
     @log_function_call
     def get_flights_records(table_name, criteria=None):    
         """
@@ -170,7 +211,6 @@ class DatabaseDAO:
         except Exception as e:
             # Handle unexpected errors
             logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
-
 
     @log_function_call
     def get_pilot_schedule(pilotId):

@@ -1,5 +1,5 @@
 import logging
-import src.databaseDAO as databaseDAO
+import databaseDAO as databaseDAO
 import util
 import business_layer.pilots as pilots
 import business_layer.airlines as airlines

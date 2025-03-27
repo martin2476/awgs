@@ -5,11 +5,12 @@ import util
 import logging
 import sqlite3
 import config
-import src.databaseDAO as databaseDAO
+import databaseDAO as databaseDAO
 
 from tabulate import tabulate
+from util import log_function_call
 
-@util.log_function_call
+@log_function_call
 def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None, flightAirline=None):
     
     # Build selection criteria dynamically
@@ -32,15 +33,15 @@ def show_flights(flightName=None, flightDestination=None, flightTerminal=None, f
     data = databaseDAO.get_flights_records("FlightDetails", query_criteria)
     print(tabulate(data, headers="keys", tablefmt="grid"))
 
-@util.log_function_call
+@log_function_call
 def update_flight_status(flightId,status):
     update_flight_record("FlightDetails", "FlightStatus", status, "FlightID", flightId)
 
-@util.log_function_call
+@log_function_call
 def update_flight_gate(flightId,gate):
     update_flight_record("FlightDetails", "FlightStatus", gate, "FlightID", flightId)
 
-@util.log_function_call
+@log_function_call
 def update_flight_pilot(flightId,pilotId):
     try:
         # Connect to the database using a context manager
@@ -65,7 +66,7 @@ def update_flight_pilot(flightId,pilotId):
     finally:
         logging.info("update_record completed.")
 
-@util.log_function_call
+@log_function_call
 def update_flight_record(table_name, column_name, value, condition_column, condition_value):
     """
     A generic function to update a specific column in a table based on a condition.

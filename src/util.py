@@ -15,3 +15,7 @@ class FlightStatus(Enum):
     BOARDING = 4
     DEPARTED = 5
     LANDED = 6
+
+class ActiveStatus(Enum):
+    INACTIVE = 0
+    ACTIVE = 1

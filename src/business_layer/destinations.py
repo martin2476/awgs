@@ -2,7 +2,7 @@
     Contains all functions related to Destinations functionality
 '''
 import util
-import src.databaseDAO as databaseDAO
+import databaseDAO as databaseDAO
 
 from tabulate import tabulate
 
