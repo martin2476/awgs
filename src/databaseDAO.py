@@ -47,46 +47,56 @@ class DatabaseDAO:
         finally:
             logging.info(f"add_record completed for table={table_name}")
 
-    @log_function_call
-    def update_record(table_name, column_name, value, condition_column, condition_value):
+    def update_record(table_name, columns_values, condition_column, condition_value):
         """
-        A generic function to update a specific column in a table based on a condition.
+        A generic function to update multiple columns in a table based on a condition.
 
         Args:
         - table_name (str): The name of the table to update.
-        - column_name (str): The column to update.
-        - value: The new value to set (can be a string, integer, etc.).
+        - columns_values (dict): A dictionary where keys are column names and values are the new values to set.
         - condition_column (str): The column to use in the WHERE clause.
         - condition_value: The value for the WHERE clause to match.
 
         Example Usage:
-        update_record("FlightDetails", "FlightStatus", "LANDED", "FlightID", 1)
+        update_record(
+            "FlightDetails", 
+            {"FlightStatus": "LANDED", "Gate": "C3"}, 
+            "FlightID", 
+            1
+        )
         """
         try:
+            # Construct the SET clause dynamically
+            set_clause = ", ".join([f"{column} = ?" for column in columns_values.keys()])
+            
+            # Extract values from the dictionary and append the condition value
+            values = list(columns_values.values())
+            values.append(condition_value)
+
             # Connect to the database using a context manager
             with sqlite3.connect(config.DATABASE_NAME) as conn:
                 cursor = conn.cursor()
-                
+
                 # Construct the SQL query dynamically
-                query = f"UPDATE {table_name} SET {column_name} = ? WHERE {condition_column} = ?;"
-                cursor.execute(query, (value, condition_value))
-                
+                query = f"UPDATE {table_name} SET {set_clause} WHERE {condition_column} = ?;"
+                cursor.execute(query, values)
+
                 # Commit the transaction
                 conn.commit()
-                logging.info(f"Record updated successfully in {table_name}: {column_name} set to {value} where {condition_column} = {condition_value}.")
-        
+                logging.info(f"Record updated successfully in {table_name}: {columns_values} where {condition_column} = {condition_value}.")
+
         except sqlite3.IntegrityError as e:
             logging.error(f"Integrity error while updating record in {table_name}: {e}")
-        
+
         except sqlite3.Error as e:
             logging.error(f"Database error occurred while updating record in {table_name}: {e}")
-        
+
         except Exception as e:
             logging.error(f"Unexpected error occurred while updating record in {table_name}: {e}")
-        
+
         finally:
             logging.info("update_record completed.")
-
+    
     @log_function_call
     def delete_record(table_name, condition, params=()):
         """

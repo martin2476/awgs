@@ -104,23 +104,23 @@ def setup_test_data():
     # Insert sample records into the Pilot table
     cursor.executemany("""
         INSERT INTO Pilot (PilotID, Name, Surname, LicenseNumber,Is_Active)
-        VALUES (?, ?, ?, ?,?);
+        VALUES (?, ?, ?, ?, ?);
     """, [
-        (1, 'John', 'Smith', 'LN12345',util.ActiveStatus.ACTIVE),
-        (2, 'Emily', 'Davis', 'LN23456',util.ActiveStatus.ACTIVE),
-        (3, 'James', 'Taylor', 'LN34567',util.ActiveStatus.ACTIVE),
-        (4, 'Olivia', 'Brown', 'LN45678',util.ActiveStatus.ACTIVE),
-        (5, 'William', 'Johnson', 'LN56789',util.ActiveStatus.ACTIVE),
-        (6, 'Sophia', 'Miller', 'LN67890',util.ActiveStatus.ACTIVE),
-        (7, 'Liam', 'Wilson', 'LN78901',util.ActiveStatus.ACTIVE),
-        (8, 'Mia', 'Moore', 'LN89012',util.ActiveStatus.ACTIVE),
-        (9, 'Benjamin', 'Clark', 'LN90123',util.ActiveStatus.ACTIVE),
-        (10, 'Charlotte', 'Hall', 'LN01234',util.ActiveStatus.ACTIVE),
-        (11, 'Henry', 'Adams', 'LN13579',util.ActiveStatus.ACTIVE),
-        (12, 'Ava', 'Johnson', 'LN24680',util.ActiveStatus.ACTIVE),
-        (13, 'Noah', 'Evans', 'LN35791',util.ActiveStatus.ACTIVE),
-        (14, 'Ella', 'Roberts', 'LN46802',util.ActiveStatus.ACTIVE),
-        (15, 'Lucas', 'Garcia', 'LN57913',util.ActiveStatus.ACTIVE)
+        (1, 'John', 'Smith', 'LN12345',util.ActiveStatus.ACTIVE.value),
+        (2, 'Emily', 'Davis', 'LN23456',util.ActiveStatus.ACTIVE.value),
+        (3, 'James', 'Taylor', 'LN34567',util.ActiveStatus.ACTIVE.value),
+        (4, 'Olivia', 'Brown', 'LN45678',util.ActiveStatus.ACTIVE.value),
+        (5, 'William', 'Johnson', 'LN56789',util.ActiveStatus.ACTIVE.value),
+        (6, 'Sophia', 'Miller', 'LN67890',util.ActiveStatus.ACTIVE.value),
+        (7, 'Liam', 'Wilson', 'LN78901',util.ActiveStatus.ACTIVE.value),
+        (8, 'Mia', 'Moore', 'LN89012',util.ActiveStatus.ACTIVE.value),
+        (9, 'Benjamin', 'Clark', 'LN90123',util.ActiveStatus.ACTIVE.value),
+        (10, 'Charlotte', 'Hall', 'LN01234',util.ActiveStatus.ACTIVE.value),
+        (11, 'Henry', 'Adams', 'LN13579',util.ActiveStatus.ACTIVE.value),
+        (12, 'Ava', 'Johnson', 'LN24680',util.ActiveStatus.ACTIVE.value),
+        (13, 'Noah', 'Evans', 'LN35791',util.ActiveStatus.ACTIVE.value),
+        (14, 'Ella', 'Roberts', 'LN46802',util.ActiveStatus.ACTIVE.value),
+        (15, 'Lucas', 'Garcia', 'LN57913',util.ActiveStatus.ACTIVE.value)
     ])
 
     # Insert sample records into the Plane table

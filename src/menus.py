@@ -28,7 +28,11 @@ def pilot_management_menu():
             pilots.add_pilot(name,surname,licenseNumber)
         elif choice == "2":
             pilotId = input("Enter the pilot's id: ")
-            pilots.amend_pilot(pilotId)
+            name = input("Enter the pilot's first name or leave blank if no change: ")
+            surname = input("Enter the pilot's surname or leave blank if no change: ")
+            licenseNumber = input("Enter the pilot's license number or leave blank if no change: ")
+            isActive = input("Is the pilot active (0 for inactive, 1 for active): ")
+            pilots.amend_pilot(pilotId,name,surname,licenseNumber,isActive)
         elif choice == "3":
             pilotId = input("Enter the pilot's id: ")
             pilots.delete_pilot(pilotId)
