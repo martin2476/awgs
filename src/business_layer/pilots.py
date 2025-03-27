@@ -130,18 +130,18 @@ def amend_pilot(pilotId, name=None, surname=None,license_number=None,status=None
     """
     try:
         # Build updated fields dynamically
-        fields = []
+        fields = {}
         if name:
-            fields.append(f"Name = '{name}'")
+            fields["Name"] = name
         if surname:
-            fields.append(f"Surname = '{surname}'")
+            fields["Surname"] = surname
         if license_number:
-            fields.append(f"LicenseNumber = '{license_number}'")
+            fields["LicenseNumber"] = license_number
         if status:
-            fields.append(f"Is_Active = '{status}'")
+            fields["Is_Active"] = status
 
         # Join criteria with AND keyword if any exist
-        query_fields = " AND ".join(fields) if fields else None
+        query_fields = fields if fields else None
 
         DatabaseDAO.update_record(
                 "Pilot", query_fields, "PilotID", pilotId
