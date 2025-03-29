@@ -67,10 +67,14 @@ def airline_management_menu():
             airlines.add_airline(name,iataCode,terminal)
         elif choice == "2":
             airlineId = input("Enter the Airline's id: ")
-            airlines.delete_airline(airlineId)
+            name = input("Enter the airline's name: ")
+            iataCode = input("Enter the airline's IATA code: ")
+            terminal = input("Enter the airline's terminal: ")
+            isActive = input("Is the airline active (0 for inactive, 1 for active): ")
+            airlines.amend_airline(airlineId,name,iataCode,terminal,isActive)
         elif choice == "3":
             airlineId = input("Enter the Airlines's id: ")
-            airlines.amend_airline(airlineId)
+            airlines.delete_airline(airlineId)
         elif choice == "4":
             airlines.show_airlines()                  
         elif choice.upper() == "X":
@@ -99,7 +103,13 @@ def airplane_management_menu():
             airplanes.add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity)
         elif choice == "2":
             airplaneId = input("Enter the Airplane's id: ")
-            airplanes.amend_airplane(airplaneId)    
+            aircraftRegistrationNumber = input("Enter the airplane registration number: ")
+            manufacturer = input("Enter the airplane's manufacturer: ")
+            model = input("Enter the airplane's model: ")
+            tailNumber = input("Enter the airplane's tail number: ")            
+            capacity = input("Enter the airplane's capacity: ")            
+            isActive = input("Is the airplane active (0 for inactive, 1 for active): ")            
+            airplanes.amend_airplane(airplaneId, aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity,isActive)
         elif choice == "3":
             airplaneId = input("Enter the Airplane's id: ")
             airplanes.delete_airplane(airplaneId)
@@ -126,11 +136,16 @@ def destination_management_menu():
             name = input("Enter the destination's name: ")
             country = input("Enter the destination's country: ")
             airportCode = input("Enter the destination's airport code: ")
-            distanceFromLondon = input("Enter the destination's distance from London: ")            
+            distanceFromLondon = input("Enter the destination's distance from London: ")
             destinations.add_destinations(name, country, airportCode,distanceFromLondon)
         elif choice == "2":
             destinationId = input("Enter the Destination's id: ")
-            destinations.amend_destination(destinationId)      
+            name = input("Enter the destination's name: ")
+            country = input("Enter the destination's country: ")
+            airportCode = input("Enter the destination's airport code: ")
+            distanceFromLondon = input("Enter the destination's distance from London: ")
+            isActive = input("Is the destination active (0 for inactive, 1 for active): ")
+            destinations.amend_destination(destinationId,name,country,airportCode,distanceFromLondon,isActive)
         elif choice == "3":
             destinationId = input("Enter the Destination's id: ")
             destinations.delete_destination(destinationId)

@@ -5,10 +5,11 @@ import util
 import logging
 import sqlite3
 import config
-import databaseDAO as databaseDAO
 
 from tabulate import tabulate
 from util import log_function_call
+from databaseDAO import DatabaseDAO
+
 
 @log_function_call
 def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None, flightAirline=None):
@@ -30,7 +31,7 @@ def show_flights(flightName=None, flightDestination=None, flightTerminal=None, f
     query_criteria = " AND ".join(criteria) if criteria else None
     
     # Fetch records with optional criteria
-    data = databaseDAO.get_flights_records("FlightDetails", query_criteria)
+    data = DatabaseDAO.get_flights_records("FlightDetails", query_criteria)
     print(tabulate(data, headers="keys", tablefmt="grid"))
 
 @log_function_call
@@ -104,4 +105,41 @@ def update_flight_record(table_name, column_name, value, condition_column, condi
         logging.error(f"Unexpected error occurred while updating record in {table_name}: {e}")
     
     finally:
-        logging.info("update_record completed.")
+        logging.info("update_flight_record completed.")
+
+@util.log_function_call
+def delete_flight(flightId):
+    """
+    Deletes a flight after conducting business checks:
+    - If the flight is marked as cancelled then it can be deleted.
+
+    Args:
+    - flightId (int): The flight's ID.
+    """
+
+    try:
+        # Check if the flight exists
+        flight_records = DatabaseDAO.get_records("Flight", f"flightID = {flightId}")
+        if not flight_records:
+            logging.info("No flight found with this ID.")
+            return
+        
+        # Build selection criteria dynamically
+        criteria = []
+        criteria.append(f"IsActive = '{util.FlightStatus.CANCELLED.value}'")
+        criteria.append(f"FlightId = '{flightId}'")
+
+        # Join criteria with AND keyword if any exist
+        query_criteria = " AND ".join(criteria) if criteria else None
+        
+        # Check if the flight is cancelled
+        flight_records = DatabaseDAO.get_flights_records("FlightDetails", query_criteria)
+        if flight_records:
+            # Delete the airline record directly
+            DatabaseDAO.delete_record("Flight", "flightID = ?", (flightId,))
+            return
+        else:
+            # There are active flights linked to this plane, it cannot be deleted or marked as in-active
+            logging.info(f"Flight with ID {flightId} cannot be deleted as the flight is not cancelled.")
+    except Exception as e:
+        logging.error(f"An error occurred while processing flight ID {flightId}: {e}")
