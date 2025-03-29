@@ -40,7 +40,7 @@ def setup_database():
                  Name TEXT, 
                  Surname TEXT, 
                  LicenseNumber TEXT,
-                 Is_Active INTEGER NOT NULL CHECK (Is_Active IN (0,1))          -- 1 is active, 0 is not active
+                 IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active
                  );""")
     cursor.execute("""CREATE TABLE Plane (
                  PlaneID INTEGER PRIMARY KEY,
@@ -49,12 +49,14 @@ def setup_database():
                  Model TEXT,  
                  TailNumber TEXT UNIQUE, 
                  Capacity TEXT
+                 IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active                   
                  );""")
     cursor.execute("""CREATE TABLE Airline (
                  AirlineID INTEGER PRIMARY KEY,
                  Name TEXT,
                  IATACode TEXT,
                  Terminal TEXT
+                 IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active                   
                  );""")
     cursor.execute("""CREATE TABLE Destination (
                  DestinationID INTEGER PRIMARY KEY,
@@ -62,6 +64,7 @@ def setup_database():
                  Country TEXT,
                  AirportCode TEXT UNIQUE,
                  DistanceFromLondon INTEGER         --
+                 IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active                   
                  );""")
     
     #Flights under 8 hours normally have 2 pilots while flights above 8 hours can have 1 or 2 relief pilots
@@ -103,7 +106,7 @@ def setup_test_data():
 
     # Insert sample records into the Pilot table
     cursor.executemany("""
-        INSERT INTO Pilot (PilotID, Name, Surname, LicenseNumber,Is_Active)
+        INSERT INTO Pilot (PilotID, Name, Surname, LicenseNumber,IsActive)
         VALUES (?, ?, ?, ?, ?);
     """, [
         (1, 'John', 'Smith', 'LN12345',util.ActiveStatus.ACTIVE.value),
@@ -125,69 +128,69 @@ def setup_test_data():
 
     # Insert sample records into the Plane table
     cursor.executemany("""
-        INSERT INTO Plane (PlaneID, AircraftRegistrationNumber, Manufacturer, Model, TailNumber, Capacity)
-        VALUES (?, ?, ?, ?, ?, ?);
+        INSERT INTO Plane (PlaneID, AircraftRegistrationNumber, Manufacturer, Model, TailNumber, Capacity, IsActive)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
     """, [
-        (1, 'G-ABCD', 'Boeing', '737-800', 'T1234', 189),
-        (2, 'N-EFGH', 'Airbus', 'A320', 'T2345', 180),
-        (3, 'F-IJKL', 'Cessna', 'Citation X', 'T3456', 12),
-        (4, 'D-MNOP', 'Gulfstream', 'G550', 'T4567', 16),
-        (5, 'G-QRST', 'Bombardier', 'Global 7500', 'T5678', 19),
-        (6, 'N-UVWX', 'Boeing', '787-9', 'T6789', 296),
-        (7, 'F-YZAB', 'Airbus', 'A350-900', 'T7890', 315),
-        (8, 'D-CDEF', 'Dassault', 'Falcon 900', 'T8901', 14),
-        (9, 'G-GHIJ', 'Embraer', 'Phenom 300', 'T9012', 10),
-        (10, 'N-KLMN', 'Piper', 'M600', 'T0123', 6),
-        (11, 'G-UVWX', 'Boeing', '747-400', 'T1357', 416),
-        (12, 'N-YZAB', 'Airbus', 'A220-300', 'T2468', 141),
-        (13, 'F-CDEF', 'Cessna', 'Skyhawk 172', 'T3579', 4),
-        (14, 'D-GHIJ', 'Dassault', 'Falcon 2000', 'T4680', 19),
-        (15, 'G-KLMN', 'Embraer', 'E175', 'T5791', 88)
+        (1, 'G-ABCD', 'Boeing', '737-800', 'T1234', 189,util.ActiveStatus.ACTIVE.value),
+        (2, 'N-EFGH', 'Airbus', 'A320', 'T2345', 180,util.ActiveStatus.ACTIVE.value),
+        (3, 'F-IJKL', 'Cessna', 'Citation X', 'T3456', 12,util.ActiveStatus.ACTIVE.value),
+        (4, 'D-MNOP', 'Gulfstream', 'G550', 'T4567', 16,util.ActiveStatus.ACTIVE.value),
+        (5, 'G-QRST', 'Bombardier', 'Global 7500', 'T5678', 19,util.ActiveStatus.ACTIVE.value),
+        (6, 'N-UVWX', 'Boeing', '787-9', 'T6789', 296,util.ActiveStatus.ACTIVE.value),
+        (7, 'F-YZAB', 'Airbus', 'A350-900', 'T7890', 315,util.ActiveStatus.ACTIVE.value),
+        (8, 'D-CDEF', 'Dassault', 'Falcon 900', 'T8901', 14,util.ActiveStatus.ACTIVE.value),
+        (9, 'G-GHIJ', 'Embraer', 'Phenom 300', 'T9012', 10,util.ActiveStatus.ACTIVE.value),
+        (10, 'N-KLMN', 'Piper', 'M600', 'T0123', 6,util.ActiveStatus.ACTIVE.value),
+        (11, 'G-UVWX', 'Boeing', '747-400', 'T1357', 416,util.ActiveStatus.ACTIVE.value),
+        (12, 'N-YZAB', 'Airbus', 'A220-300', 'T2468', 141,util.ActiveStatus.ACTIVE.value),
+        (13, 'F-CDEF', 'Cessna', 'Skyhawk 172', 'T3579', 4,util.ActiveStatus.ACTIVE.value),
+        (14, 'D-GHIJ', 'Dassault', 'Falcon 2000', 'T4680', 19,util.ActiveStatus.ACTIVE.value),
+        (15, 'G-KLMN', 'Embraer', 'E175', 'T5791', 88,util.ActiveStatus.ACTIVE.value)
     ])
 
     # Insert sample records into the Destination table
     cursor.executemany("""
-        INSERT INTO Destination (DestinationID, Name, Country, AirportCode,DistanceFromLondon)
-        VALUES (?, ?, ?, ?,?);
+        INSERT INTO Destination (DestinationID, Name, Country, AirportCode,DistanceFromLondon, IsActive)
+        VALUES (?, ?, ?, ?,?, ?);
     """, [
-        (1, 'Paris Charles de Gaulle', 'France', 'CDG', 344),
-        (2, 'New York John F. Kennedy', 'United States', 'JFK', 5570),
-        (3, 'Tokyo Narita', 'Japan', 'NRT', 5973),
-        (4, 'Dubai International', 'United Arab Emirates', 'DXB', 3405),
-        (5, 'Sydney Kingsford Smith', 'Australia', 'SYD', 10563),
-        (6, 'Singapore Changi', 'Singapore', 'SIN', 6762),
-        (7, 'Cape Town International', 'South Africa', 'CPT', 6015),
-        (8, 'Toronto Pearson', 'Canada', 'YYZ', 3557),
-        (9, 'Frankfurt Airport', 'Germany', 'FRA', 406),
-        (10, 'São Paulo Guarulhos', 'Brazil', 'GRU', 5921),
-        (11, 'Los Angeles International', 'United States', 'LAX', 8757),
-        (12, 'Hong Kong International', 'Hong Kong', 'HKG', 5990),
-        (13, 'Amsterdam Schiphol', 'Netherlands', 'AMS', 356),
-        (14, 'Madrid Barajas', 'Spain', 'MAD', 785),
-        (15, 'Mexico City International', 'Mexico', 'MEX', 5533),
-        (16, 'Heathrow Airport', 'UK', 'LHR', 0)
+        (1, 'Paris Charles de Gaulle', 'France', 'CDG', 344,util.ActiveStatus.ACTIVE.value),
+        (2, 'New York John F. Kennedy', 'United States', 'JFK', 5570,util.ActiveStatus.ACTIVE.value),
+        (3, 'Tokyo Narita', 'Japan', 'NRT', 5973,util.ActiveStatus.ACTIVE.value),
+        (4, 'Dubai International', 'United Arab Emirates', 'DXB', 3405,util.ActiveStatus.ACTIVE.value),
+        (5, 'Sydney Kingsford Smith', 'Australia', 'SYD', 10563,util.ActiveStatus.ACTIVE.value),
+        (6, 'Singapore Changi', 'Singapore', 'SIN', 6762,util.ActiveStatus.ACTIVE.value),
+        (7, 'Cape Town International', 'South Africa', 'CPT', 6015,util.ActiveStatus.ACTIVE.value),
+        (8, 'Toronto Pearson', 'Canada', 'YYZ', 3557,util.ActiveStatus.ACTIVE.value),
+        (9, 'Frankfurt Airport', 'Germany', 'FRA', 406,util.ActiveStatus.ACTIVE.value),
+        (10, 'São Paulo Guarulhos', 'Brazil', 'GRU', 5921,util.ActiveStatus.ACTIVE.value),
+        (11, 'Los Angeles International', 'United States', 'LAX', 8757,util.ActiveStatus.ACTIVE.value),
+        (12, 'Hong Kong International', 'Hong Kong', 'HKG', 5990,util.ActiveStatus.ACTIVE.value),
+        (13, 'Amsterdam Schiphol', 'Netherlands', 'AMS', 356,util.ActiveStatus.ACTIVE.value),
+        (14, 'Madrid Barajas', 'Spain', 'MAD', 785,util.ActiveStatus.ACTIVE.value),
+        (15, 'Mexico City International', 'Mexico', 'MEX', 5533,util.ActiveStatus.ACTIVE.value),
+        (16, 'Heathrow Airport', 'UK', 'LHR', 0,util.ActiveStatus.ACTIVE.value)
     ])    
 
     # Insert sample records into the Airline table
     cursor.executemany("""
-        INSERT INTO Airline (AirlineID, Name, IATACode, Terminal)
-        VALUES (?, ?, ?, ?);
+        INSERT INTO Airline (AirlineID, Name, IATACode, Terminal, IsActive)
+        VALUES (?, ?, ?, ?, ?);
     """, [
-        (1, 'British Airways', 'BA', '3, 5'),
-        (2, 'Virgin Atlantic', 'VS', '3' ),
-        (3, 'American Airlines', 'AA', '3' ),
-        (4, 'Lufthansa', 'LH', '2' ),
-        (5, 'Emirates', 'EK', '3' ),
-        (6, 'Qatar Airways', 'QR', '4' ),
-        (7, 'Singapore Airlines', 'SQ', '2' ),
-        (8, 'Air Canada', 'AC', '2' ),
-        (9, 'KLM Royal Dutch', 'KL', '4' ),
-        (10, 'Qantas', 'QF', '3' ),
-        (11, 'Delta Air Lines', 'DL', '4'),
-        (12, 'Turkish Airlines', 'TK', '3'),
-        (13, 'Etihad Airways', 'EY', '4'),
-        (14, 'Aer Lingus', 'EI', '2'),
-        (15, 'Swiss International Air Lines', 'LX', '2')
+        (1, 'British Airways' 'BA', '3, 5',util.ActiveStatus.ACTIVE.value),
+        (2, 'Virgin Atlantic', 'VS', '3' ,util.ActiveStatus.ACTIVE.value),
+        (3, 'American Airlines', 'AA', '3' ,util.ActiveStatus.ACTIVE.value),
+        (4, 'Lufthansa', 'LH', '2' ,util.ActiveStatus.ACTIVE.value),
+        (5, 'Emirates', 'EK', '3' ,util.ActiveStatus.ACTIVE.value),
+        (6, 'Qatar Airways', 'QR', '4' ,util.ActiveStatus.ACTIVE.value),
+        (7, 'Singapore Airlines', 'SQ', '2' ,util.ActiveStatus.ACTIVE.value),
+        (8, 'Air Canada', 'AC', '2' ,util.ActiveStatus.ACTIVE.value),
+        (9, 'KLM Royal Dutch', 'KL', '4' ,util.ActiveStatus.ACTIVE.value),
+        (10, 'Qantas', 'QF', '3' ,util.ActiveStatus.ACTIVE.value),
+        (11, 'Delta Air Lines', 'DL', '4',util.ActiveStatus.ACTIVE.value),
+        (12, 'Turkish Airlines', 'TK', '3',util.ActiveStatus.ACTIVE.value),
+        (13, 'Etihad Airways', 'EY', '4',util.ActiveStatus.ACTIVE.value),
+        (14, 'Aer Lingus', 'EI', '2',util.ActiveStatus.ACTIVE.value),
+        (15, 'Swiss International Air Lines', 'LX', '2',util.ActiveStatus.ACTIVE.value)
     ])
 
     # Generate 15 sample records for FlightDetails

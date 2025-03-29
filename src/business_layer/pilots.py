@@ -51,10 +51,21 @@ class Pilot:
 
 @util.log_function_call
 def add_pilot(name, surname, licenseNumber):
-    DatabaseDAO.add_record(
+    column_names=["Name", "Surname", "LicenseNumber","Is_Active"]
+    values=(name, surname, licenseNumber,util.ActiveStatus.ACTIVE.value)
+
+    outcome = DatabaseDAO.add_record(
     table_name="Pilot",
-    column_names=["Name", "Surname", "LicenseNumber","Is_Active"],
-    values=(name, surname, licenseNumber,util.ActiveStatus.ACTIVE.value))
+    column_names=column_names,
+    values=values)
+
+    # Construct records dynamically
+    records = [{"Column": col, "Value": val} for col, val in zip(column_names, values)]
+
+    if (outcome == True):
+        print(tabulate(records, headers="keys", tablefmt="grid"))
+    else:
+        print("Record has not been saved.")
 
 @util.log_function_call
 def delete_pilot(pilotId):
@@ -117,16 +128,16 @@ def delete_pilot(pilotId):
         logging.error(f"An error occurred while processing pilot ID {pilotId}: {e}")
 
 @util.log_function_call    
-def amend_pilot(pilotId, name=None, surname=None,license_number=None,status=None):
+def amend_pilot(pilotId, name=None, surname=None,licenseNumber=None,isActive=None):
     """
-    Uupdate a pilot details
+    Update a pilot details
 
     Args:
     - pilotId (int): The pilot's ID.
     - name (str): if none, then there is no change.
     - surname (str): if none, then there is no change.
     - license_number (str): if none, then there is no change.
-    - status (ActiveStatus): if none, then there is no change
+    - isActive (ActiveStatus): if none, then there is no change
     """
     try:
         # Build updated fields dynamically
@@ -135,10 +146,10 @@ def amend_pilot(pilotId, name=None, surname=None,license_number=None,status=None
             fields["Name"] = name
         if surname:
             fields["Surname"] = surname
-        if license_number:
-            fields["LicenseNumber"] = license_number
-        if status:
-            fields["Is_Active"] = status
+        if licenseNumber:
+            fields["LicenseNumber"] = licenseNumber
+        if isActive:
+            fields["Is_Active"] = isActive
 
         # Join criteria with AND keyword if any exist
         query_fields = fields if fields else None
@@ -160,8 +171,11 @@ def show_pilots():
 
 @util.log_function_call
 def show_pilot_schedule(pilotId):
-    data = DatabaseDAO.get_pilot_schedule(pilotId)
-    print(tabulate(data, headers="keys", tablefmt="grid"))
+    records = DatabaseDAO.get_pilot_schedule(pilotId)
+    if records:
+        print(tabulate(records, headers="keys", tablefmt="grid"))
+    else:
+        print("No records found.")
 
 @util.log_function_call
 def show_all_pilots_schedule():

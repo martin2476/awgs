@@ -14,7 +14,10 @@ class DatabaseDAO:
         - column_names (list): List of column names for the insertion.
         - values (tuple): Tuple of values corresponding to the columns.
 
+        Returm:
+        - True if no errors otherwise false
         """
+        return_value = False
         try:
             # Connect to the database using a context manager
             with sqlite3.connect(config.DATABASE_NAME) as conn:
@@ -31,6 +34,7 @@ class DatabaseDAO:
                 # Commit the transaction
                 conn.commit()
                 logging.info(f"Record added successfully to {table_name}: {values}")
+                return_value = True
         
         except sqlite3.IntegrityError as e:
             # Handle specific SQLite exceptions
@@ -46,6 +50,7 @@ class DatabaseDAO:
         
         finally:
             logging.info(f"add_record completed for table={table_name}")
+            return return_value
 
     def update_record(table_name, columns_values, condition_column, condition_value):
         """

@@ -16,6 +16,25 @@ class FlightStatus(Enum):
     DEPARTED = 5
     LANDED = 6
 
+
+
 class ActiveStatus(Enum):
     INACTIVE = 0
     ACTIVE = 1
+
+
+def get_active_flight_statuses():
+    """
+    Returns an array containing a list of Status which an Active flight could have
+    
+    return (Scheduled,Departed,Boarding,Delayed,Landed)
+    """    
+    active_statuses = [
+        FlightStatus.SCHEDULED.value, 
+        FlightStatus.DEPARTED.value, 
+        FlightStatus.BOARDING.value, 
+        FlightStatus.DELAYED.value, 
+        FlightStatus.LANDED.value
+    ]
+    return f"({','.join(map(str, active_statuses))})"
+
