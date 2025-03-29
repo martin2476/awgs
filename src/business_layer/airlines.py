@@ -90,7 +90,7 @@ def delete_airline(airlineId):
         # Check if there are active flights linked to the airline
         active_flights = DatabaseDAO.get_records(
             "FlightDetails", 
-            f"WHERE AirlineId = {airlineId} AND FlightStatus IN {status_result}"
+            f"AirlineId = {airlineId} AND FlightStatus IN {status_result}"
         )
         if not active_flights:
             # Mark airline as inactive instead of deleting
