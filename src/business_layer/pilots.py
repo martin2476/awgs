@@ -171,6 +171,10 @@ def show_pilots():
 
 @util.log_function_call
 def show_pilot_schedule(pilotId):
+    query = f"SELECT Name, Surname FROM Pilot WHERE PilotID = {pilotId}"
+    pilot = DatabaseDAO.execute(query)
+    print(f'Pilot: {pilot[0]["Name"]} {pilot[0]["Surname"]}')
+
     records = DatabaseDAO.get_pilot_schedule(pilotId)
     if records:
         print(tabulate(records, headers="keys", tablefmt="grid"))

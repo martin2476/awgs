@@ -282,3 +282,35 @@ class DatabaseDAO:
             # Handle unexpected errors
             logging.error(f"Unexpected error occurred while fetching records from FlightDetails: {e}")   
     
+    @log_function_call
+    def execute(query):
+        """
+        A generic function
+
+        Args:
+        - query (str): the sql query
+        """        
+        try:
+            # Use a context manager for safe connection handling
+            with sqlite3.connect(config.DATABASE_NAME) as conn:
+                cursor = conn.cursor()
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                
+                column_names = [description[0] for description in cursor.description]
+
+                result = [
+                    {column_names[index]: value for index, value in enumerate(row)}
+                    for row in rows
+                ]
+
+            logging.info(f"execute completed successfully")
+            return result
+        
+        except sqlite3.Error as e:
+            # Log database-specific errors
+            logging.error(f"Database error occurred while executing query.")
+        
+        except Exception as e:
+            # Handle unexpected errors
+            logging.error(f"Unexpected error occurred while executing query.")       

@@ -48,14 +48,14 @@ def setup_database():
                  Manufacturer TEXT,
                  Model TEXT,  
                  TailNumber TEXT UNIQUE, 
-                 Capacity TEXT
+                 Capacity TEXT,
                  IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active                   
                  );""")
     cursor.execute("""CREATE TABLE Airline (
                  AirlineID INTEGER PRIMARY KEY,
                  Name TEXT,
                  IATACode TEXT,
-                 Terminal TEXT
+                 Terminal TEXT,
                  IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active                   
                  );""")
     cursor.execute("""CREATE TABLE Destination (
@@ -63,7 +63,7 @@ def setup_database():
                  Name TEXT,
                  Country TEXT,
                  AirportCode TEXT UNIQUE,
-                 DistanceFromLondon INTEGER         --
+                 DistanceFromLondon INTEGER,         --
                  IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active                   
                  );""")
     
@@ -176,7 +176,7 @@ def setup_test_data():
         INSERT INTO Airline (AirlineID, Name, IATACode, Terminal, IsActive)
         VALUES (?, ?, ?, ?, ?);
     """, [
-        (1, 'British Airways' 'BA', '3, 5',util.ActiveStatus.ACTIVE.value),
+        (1, 'British Airways', 'BA', '3', util.ActiveStatus.ACTIVE.value),
         (2, 'Virgin Atlantic', 'VS', '3' ,util.ActiveStatus.ACTIVE.value),
         (3, 'American Airlines', 'AA', '3' ,util.ActiveStatus.ACTIVE.value),
         (4, 'Lufthansa', 'LH', '2' ,util.ActiveStatus.ACTIVE.value),
