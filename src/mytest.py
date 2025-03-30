@@ -60,22 +60,25 @@ def test_add_pilot():
     try:
         # Connect to the database using a context manager
         with sqlite3.connect(config.DATABASE_NAME) as conn:
+            conn.row_factory = sqlite3.Row #Allow accessing rows as dictionary
             cursor = conn.cursor()
-            
-            # Confirm that a pilot with ID 16 does not exists
-            rows = cursor.execute("SELECT COUNT(*) from Pilot where PilotID = 16")
-            rows = cursor.fetchall()
-            assert int(rows[0][0]) == 0
-            
-            pilots.add_pilot("Martin","Fenech","XYZ123") 
-            rows = cursor.execute("SELECT Name, Surname, LicenseNumber, IsActive from Pilot where PilotID = 16")
-            rows = cursor.fetchall()
-            assert len(rows) == 1
-            assert str(rows[0][0]) == "Martin"
-            assert str(rows[0][1]) == "Fenech"
-            assert str(rows[0][2]) == "XYZ123"
-            assert int(rows[0][3]) == util.ActiveStatus.ACTIVE.value
 
+            #Generate a random name to be sure there are no conflicts
+            name = str(uuid.uuid4())            
+            
+            cursor.execute(f"SELECT COUNT(*) from Pilot where Name = ?",(name,))
+            row = cursor.fetchone()
+            assert row[0] == 0 # Ensure there are no pilots with this name
+            
+            #Add the pilot
+            pilots.add_pilot(name,'Fenech','tyr123')
+            cursor.execute(f"Select PilotId,Name,Surname,LicenseNumber,IsActive from Pilot where Name = ?",(name,))
+            row = cursor.fetchone()
+            assert row is not None 
+            assert row["Name"] == name
+            assert row["Surname"] == "Fenech"
+            assert row["LicenseNumber"] == "tyr123"
+            assert row["IsActive"] == util.ActiveStatus.ACTIVE.value
 
     except sqlite3.IntegrityError as e:
         # Handle specific SQLite exceptions

@@ -24,7 +24,7 @@ def main():
     sd.setup_database()
     sd.setup_test_data()
 
-    mytest.test_delete_pilot()
+    #mytest.test_delete_pilot()
     mytest.test_add_pilot()
 
     while True:
