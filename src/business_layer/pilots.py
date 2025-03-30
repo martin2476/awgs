@@ -148,7 +148,7 @@ def amend_pilot(pilotId, name=None, surname=None,licenseNumber=None,isActive=Non
             fields["Surname"] = surname
         if licenseNumber:
             fields["LicenseNumber"] = licenseNumber
-        if isActive:
+        if isActive != None:
             fields["IsActive"] = isActive
 
         # Join criteria with AND keyword if any exist

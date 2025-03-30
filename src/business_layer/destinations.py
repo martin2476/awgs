@@ -47,7 +47,7 @@ def amend_destination(destinationId, name=None, country=None,airportCode=None,di
             fields["AirportCode"] = airportCode
         if distanceFromLondon:
             fields["DistanceFromLondon"] = distanceFromLondon        
-        if isActive:
+        if isActive != None:
             fields["IsActive"] = isActive
 
         # Join criteria with AND keyword if any exist

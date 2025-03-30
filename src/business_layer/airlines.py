@@ -44,7 +44,7 @@ def amend_airline(airlineId, name=None, iataCode=None,terminal=None,isActive=Non
             fields["IATACode"] = iataCode
         if terminal:
             fields["Terminal"] = terminal
-        if isActive:
+        if isActive != None:
             fields["IsActive"] = isActive
 
         # Join criteria with AND keyword if any exist

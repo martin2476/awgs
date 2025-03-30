@@ -25,7 +25,8 @@ def main():
     sd.setup_test_data()
 
     #mytest.test_delete_pilot()
-    mytest.test_add_pilot()
+    #mytest.test_add_pilot()
+    mytest.test_amend_pilot()
 
     while True:
         print("\nChoose an option:")

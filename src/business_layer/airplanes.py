@@ -51,7 +51,7 @@ def amend_airplane(airplaneId, aircraftRegistrationNumber=None, manufacturer=Non
             fields["TailNumber"] = tailNumber
         if capacity:
             fields["Capacity"] = capacity
-        if isActive:
+        if isActive != None:
             fields["IsActive"] = isActive
 
         # Join criteria with AND keyword if any exist
