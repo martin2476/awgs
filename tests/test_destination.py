@@ -3,11 +3,10 @@ import sqlite3
 import logging
 import src.util as util
 import src.config as config
-import src.databaseDAO as du
-import src.business_layer.pilots as pilots
+import src.business_layer.destinations as destinations
 
 @util.log_function_call
-def test_delete_pilot():
+def test_delete_destination():
     try:
         # Connect to the database using a context manager
         with sqlite3.connect(config.DATABASE_NAME) as conn:
@@ -17,30 +16,30 @@ def test_delete_pilot():
             #Generate a random name to be sure there are no conflicts
             name = str(uuid.uuid4())
 
-            cursor.execute(f"SELECT COUNT(*) from Pilot where Name = ?",(name,))
+            cursor.execute(f"SELECT COUNT(*) from Destination where Name = ?",(name,))
             row = cursor.fetchone()
-            assert row[0] == 0 # Ensure there are no pilots with this name
+            assert row[0] == 0 # Ensure there are no destinations with this name
 
-            #Add the pilot
+            #Add the destination
             cursor.execute("""
-                    INSERT INTO Pilot (Name, Surname, LicenseNumber,IsActive)
-                    VALUES (?, ?, ?, ?);
+                    INSERT INTO Destination (Name, Country, AirportCode,DistanceFromLondon,IsActive)
+                    VALUES (?, ?, ?, ?, ?);
                 """, 
-                (name, 'Fenech', 'tyr123',util.ActiveStatus.ACTIVE.value))
+                (name, 'bla bla', 'tyr123',51,util.ActiveStatus.ACTIVE.value))
             conn.commit()
 
 
-            #Verify that the pilot was inserted
-            cursor.execute(f"Select PilotId,Name from Pilot where Name = ?",(name,))
+            #Verify that the destination was inserted
+            cursor.execute(f"Select DestinationId,Name from Destination where Name = ?",(name,))
             row = cursor.fetchone()
             assert row is not None 
             assert row["Name"] == name
            
-            pilotId = row["PilotID"]
-            pilots.delete_pilot(pilotId) #this has its own commit
-            cursor.execute(f"SELECT COUNT(*) from Pilot where PilotID = ?",(pilotId,))
+            destinationId = row["DestinationID"]
+            destinations.delete_destination(destinationId) #this has its own commit
+            cursor.execute(f"SELECT COUNT(*) from Destination where DestinationId = ?",(destinationId,))
             row = cursor.fetchone()
-            assert row[0] == 0 #Ensure the pilot does no longer exists
+            assert row[0] == 0 #Ensure the destination does no longer exists
 
     except sqlite3.IntegrityError as e:
         # Handle specific SQLite exceptions
@@ -54,7 +53,7 @@ def test_delete_pilot():
         # Handle unexpected errors
         logging.error(f"Unexpected error: {e}")
        
-def test_add_pilot():
+def test_add_destination():
     try:
         # Connect to the database using a context manager
         with sqlite3.connect(config.DATABASE_NAME) as conn:
@@ -64,18 +63,19 @@ def test_add_pilot():
             #Generate a random name to be sure there are no conflicts
             name = str(uuid.uuid4())            
             
-            cursor.execute(f"SELECT COUNT(*) from Pilot where Name = ?",(name,))
+            cursor.execute(f"SELECT COUNT(*) from Destination where Name = ?",(name,))
             row = cursor.fetchone()
-            assert row[0] == 0 # Ensure there are no pilots with this name
+            assert row[0] == 0 # Ensure there are no destinations with this name
             
-            #Add the pilot
-            pilots.add_pilot(name,'Fenech','tyr123')
-            cursor.execute(f"Select PilotId,Name,Surname,LicenseNumber,IsActive from Pilot where Name = ?",(name,))
+            #Add the destination
+            destinations.add_destination(name,'bla bla','tyr123',51)
+            cursor.execute(f"Select DestinationId,Name,Country,AirportCode,DistanceFromLondon,IsActive from Destination where Name = ?",(name,))
             row = cursor.fetchone()
             assert row is not None 
             assert row["Name"] == name
-            assert row["Surname"] == "Fenech"
-            assert row["LicenseNumber"] == "tyr123"
+            assert row["Country"] == "bla bla"
+            assert row["AirportCode"] == "tyr123"
+            assert row["DistanceFromLondon"] == 51
             assert row["IsActive"] == util.ActiveStatus.ACTIVE.value
 
     except sqlite3.IntegrityError as e:
@@ -90,7 +90,7 @@ def test_add_pilot():
         # Handle unexpected errors
         logging.error(f"Unexpected error: {e}")
 
-def test_amend_pilot():
+def test_amend_destination():
     try:
         # Connect to the database using a context manager
         with sqlite3.connect(config.DATABASE_NAME) as conn:
@@ -100,35 +100,38 @@ def test_amend_pilot():
             #Generate a random name to be sure there are no conflicts
             name = str(uuid.uuid4())            
             
-            cursor.execute(f"SELECT COUNT(*) from Pilot where Name = ?",(name,))
+            cursor.execute(f"SELECT COUNT(*) from Destination where Name = ?",(name,))
             row = cursor.fetchone()
-            assert row[0] == 0 # Ensure there are no pilots with this name
+            assert row[0] == 0 # Ensure there are no destinations with this name
             
-            #Add the pilot
-            pilots.add_pilot(name,'Fenech','tyr123')
-            cursor.execute(f"Select PilotId,Name,Surname,LicenseNumber,IsActive from Pilot where Name = ?",(name,))
+            #Add the destination
+            destinations.add_destination(name,'Bla Bla','tyr123',51)
+            cursor.execute(f"Select DestinationId,Name,Country,AirportCode,DistanceFromLondon,IsActive from Destination where Name = ?",(name,))
             row = cursor.fetchone()
-            pilotId = row["PilotId"]
+            destinationId = row["DestinationId"]
             assert row is not None 
             assert row["Name"] == name
-            assert row["Surname"] == "Fenech"
-            assert row["LicenseNumber"] == "tyr123"
+            assert row["Country"] == "Bla Bla"
+            assert row["AirportCode"] == "tyr123"
+            assert row["DistanceFromLondon"] == 51
             assert row["IsActive"] == util.ActiveStatus.ACTIVE.value
 
-            #Amend the pilot
+            #Amend the destination
             name = str(uuid.uuid4())
-            surname = str(uuid.uuid4())
-            licenseNumber= str(uuid.uuid4())
+            country = str(uuid.uuid4())
+            airportCode= str(uuid.uuid4())
+            distanceFromLondon= 99
             isActive = util.ActiveStatus.INACTIVE.value
-            pilots.amend_pilot(pilotId,name,surname,licenseNumber,isActive)
+            destinations.amend_destination(destinationId,name,country,airportCode,distanceFromLondon,isActive)
 
-            #get the pilot again and check that the values have been updated
-            cursor.execute(f"Select PilotId,Name,Surname,LicenseNumber,IsActive from Pilot where PilotId = ?",(pilotId,))
+            #get the destination again and check that the values have been updated
+            cursor.execute(f"Select DestinationId,Name,Country,AirportCode,DistanceFromLondon,IsActive from Destination where DestinationId = ?",(destinationId,))
             row = cursor.fetchone()
             assert row is not None 
             assert row["Name"] == name
-            assert row["Surname"] == surname
-            assert row["LicenseNumber"] == licenseNumber
+            assert row["Country"] == country
+            assert row["AirportCode"] == airportCode
+            assert row["DistanceFromLondon"] == distanceFromLondon
             assert row["IsActive"] == isActive
 
     except sqlite3.IntegrityError as e:

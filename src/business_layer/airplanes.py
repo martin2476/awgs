@@ -20,8 +20,8 @@ def show_airplanes():
 def add_airplane(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity):
     DatabaseDAO.add_record(
     table_name="Plane",
-    column_names=["AircraftRegistrationNumber", "Manufacturer", "Model","TailNumber","Capacity"],
-    values=(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity))
+    column_names=["AircraftRegistrationNumber", "Manufacturer", "Model","TailNumber","Capacity","IsActive"],
+    values=(aircraftRegistrationNumber,manufacturer,model,tailNumber,capacity,util.ActiveStatus.ACTIVE.value))
 
 
 @util.log_function_call    
@@ -58,7 +58,7 @@ def amend_airplane(airplaneId, aircraftRegistrationNumber=None, manufacturer=Non
         query_fields = fields if fields else None
 
         DatabaseDAO.update_record(
-                "Airplane", query_fields, "AirplaneId", airplaneId
+                "Plane", query_fields, "PlaneId", airplaneId
             )
     except Exception as e:
         logging.error(f"An error occurred while processing airplane with ID {airplaneId}: {e}")
@@ -79,16 +79,16 @@ def delete_airplane(airplaneId):
 
     try:
         # Check if the airplane exists
-        airplane_records = DatabaseDAO.get_records("Airplane", f"airplaneId = {airplaneId}")
+        airplane_records = DatabaseDAO.get_records("Plane", f"PlaneId = {airplaneId}")
         if not airplane_records:
             logging.info("No airplane found with this ID.")
             return
 
         # Check if the airplane is assigned to any flights
-        flight_records = DatabaseDAO.get_records("FlightDetails", f"AirplaneId = {airplaneId}")
+        flight_records = DatabaseDAO.get_records("FlightDetails", f"PlaneId = {airplaneId}")
         if not flight_records:
             # Delete the airplane record directly
-            DatabaseDAO.delete_record("Airplane", "AirplaneId = ?", (airplaneId,))
+            DatabaseDAO.delete_record("Plane", "PlaneId = ?", (airplaneId,))
             return
 
         # Define flight statuses that are considered active
@@ -102,7 +102,7 @@ def delete_airplane(airplaneId):
         if not active_flights:
             # Mark airplane as inactive instead of deleting
             DatabaseDAO.update_record(
-                "Airplane", "IsActive", util.ActiveStatus.INACTIVE, "AirplaneId", airplaneId
+                "Plane", "IsActive", util.ActiveStatus.INACTIVE, "PlaneId", airplaneId
             )
             logging.info(f"Airplane with ID {airplaneId} has been marked as inactive since it is associated to an Active flight.")
         else:

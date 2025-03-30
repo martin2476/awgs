@@ -16,7 +16,7 @@ def show_destinations():
         print("No records found.")    
 
 @util.log_function_call
-def add_destinations(name, country, airportCode,distanceFromLondon):
+def add_destination(name, country, airportCode,distanceFromLondon):
     DatabaseDAO.add_record(
     table_name="Destination",
     column_names=["Name", "Country", "AirportCode","DistanceFromLondon"],
