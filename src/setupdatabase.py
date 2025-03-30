@@ -68,7 +68,7 @@ def setup_database():
                  );""")
     
     #Flights under 8 hours normally have 2 pilots while flights above 8 hours can have 1 or 2 relief pilots
-    #there I am using linkage table
+    #therefore I am using linkage table since there is a one to many relationship between a flight and pilots
     cursor.execute("""CREATE TABLE FlightPilots (
                  ID INTEGER PRIMARY KEY,
                  FlightID INTEGER,       -- Link to the flight
