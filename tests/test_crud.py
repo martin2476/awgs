@@ -4,12 +4,6 @@ import src.util as util
 import src.config as config
 import src.databaseDAO as du
 
-logging.basicConfig(
-    level=logging.WARNING,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-    format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
-    )
-
-
 @util.log_function_call
 def test_delete_record():
     try:

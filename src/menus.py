@@ -233,7 +233,8 @@ def update_flight_menu():
 def reporting_menu():
     while True:
         print("\n=== Reporting Menu ===")
-        print("1. Number of flights per destination")
+        print("1. Summary of flights per destination")
+        print("2. Summary of flights per pilot")
         print("X. Back")
         
         choice = input("Enter your choice: ")

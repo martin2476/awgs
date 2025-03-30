@@ -1,10 +1,12 @@
-import os
-import sys
 import pytest
-
-print(sys.path)
+import logging
 
 import src.setupdatabase as db
+
+logging.basicConfig(
+    level=logging.WARNING,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
+    )
 
 # Called before  any tests are run
 @pytest.hookimpl(tryfirst=True)

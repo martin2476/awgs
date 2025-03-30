@@ -104,7 +104,7 @@ def delete_airplane(airplaneId):
             DatabaseDAO.update_record(
                 "Airplane", "IsActive", util.ActiveStatus.INACTIVE, "AirplaneId", airplaneId
             )
-            logging.info(f"Airplane with ID {airplaneId} has been marked as inactive.")
+            logging.info(f"Airplane with ID {airplaneId} has been marked as inactive since it is associated to an Active flight.")
         else:
             # There are active flights linked to this plane, it cannot be deleted or marked as in-active
             logging.info(f"Airplane with ID {airplaneId} cannot be deleted or marked as inactive because there are active flights linked to this airplane.")

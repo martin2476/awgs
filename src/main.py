@@ -1,11 +1,12 @@
 import logging
 import menus
 import setupdatabase as sd
+import mytest
 
 
 # Configure logging
 logging.basicConfig(
-    level=logging.WARNING,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    level=logging.INFO,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
     format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
     )
     
@@ -22,6 +23,9 @@ def main():
     sd.cleanup_database()
     sd.setup_database()
     sd.setup_test_data()
+
+    mytest.test_delete_pilot()
+    mytest.test_add_pilot()
 
     while True:
         print("\nChoose an option:")

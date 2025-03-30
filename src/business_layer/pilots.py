@@ -51,7 +51,7 @@ class Pilot:
 
 @util.log_function_call
 def add_pilot(name, surname, licenseNumber):
-    column_names=["Name", "Surname", "LicenseNumber","Is_Active"]
+    column_names=["Name", "Surname", "LicenseNumber","IsActive"]
     values=(name, surname, licenseNumber,util.ActiveStatus.ACTIVE.value)
 
     outcome = DatabaseDAO.add_record(
@@ -117,7 +117,7 @@ def delete_pilot(pilotId):
         if active_flights:
             # Mark pilot as inactive instead of deleting
             DatabaseDAO.update_record(
-                "Pilot", "Is_Active", util.ActiveStatus.INACTIVE, "PilotID", pilotId
+                "Pilot", "IsActive", util.ActiveStatus.INACTIVE, "PilotID", pilotId
             )
             logging.info(f"Pilot with ID {pilotId} has been marked as inactive.")
         else:
@@ -149,7 +149,7 @@ def amend_pilot(pilotId, name=None, surname=None,licenseNumber=None,isActive=Non
         if licenseNumber:
             fields["LicenseNumber"] = licenseNumber
         if isActive:
-            fields["Is_Active"] = isActive
+            fields["IsActive"] = isActive
 
         # Join criteria with AND keyword if any exist
         query_fields = fields if fields else None
