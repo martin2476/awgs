@@ -17,15 +17,15 @@ def show_flights(flightName=None, flightDestination=None, flightTerminal=None, f
     # Build selection criteria dynamically
     criteria = []
     if flightName:
-        criteria.append(f"FlightName = '{flightName}'")
+        criteria.append(f"FlightDetails.FlightName = '{flightName}'")
     if flightDestination:
-        criteria.append(f"DestinationID = '{flightDestination}'")
+        criteria.append(f"FlightDetails.DestinationID = '{flightDestination}'")
     if flightTerminal:
-        criteria.append(f"Terminal = '{flightTerminal}'")
+        criteria.append(f"FlightDetails.Terminal = '{flightTerminal}'")
     if flightDate:
-        criteria.append(f"ScheduledFlightDate = '{flightDate}'")
+        criteria.append(f"FlightDetails.ScheduledFlightDate = '{flightDate}'")
     if flightAirline:
-        criteria.append(f"Airline = '{flightAirline}'")
+        criteria.append(f"FlightDetails.Airline = '{flightAirline}'")
 
     # Join criteria with AND keyword if any exist
     query_criteria = " AND ".join(criteria) if criteria else None

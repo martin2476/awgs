@@ -25,7 +25,7 @@ def main():
     sd.setup_test_data()
 
     #mytest.test_add_airplane()
-    mytest.test_amend_airplane()
+    #mytest.test_amend_airplane()
     #mytest.test_delete_airplane()
 
     while True:
