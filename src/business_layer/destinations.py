@@ -19,8 +19,8 @@ def show_destinations():
 def add_destination(name, country, airportCode,distanceFromLondon):
     DatabaseDAO.add_record(
     table_name="Destination",
-    column_names=["Name", "Country", "AirportCode","DistanceFromLondon"],
-    values=(name, country, airportCode,distanceFromLondon))
+    column_names=["Name", "Country", "AirportCode","DistanceFromLondon","IsActive"],
+    values=(name, country, airportCode,distanceFromLondon,util.ActiveStatus.ACTIVE.value))
 
 
 @util.log_function_call    

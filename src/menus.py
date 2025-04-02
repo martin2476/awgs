@@ -137,7 +137,7 @@ def destination_management_menu():
             country = input("Enter the destination's country: ")
             airportCode = input("Enter the destination's airport code: ")
             distanceFromLondon = input("Enter the destination's distance from London: ")
-            destinations.add_destinations(name, country, airportCode,distanceFromLondon)
+            destinations.add_destination(name, country, airportCode,distanceFromLondon)
         elif choice == "2":
             destinationId = input("Enter the Destination's id: ")
             name = input("Enter the destination's name: ")
@@ -170,12 +170,18 @@ def flight_management_menu():
         
         if choice == "1":
             logging.info("Adding a new flight.")
-            # Placeholder for adding pilot logic
+            flightName = input("Enter the Flight's name: ")
+            flightDestination = input("Enter the Flight's destination Code: ")
+            flightTerminal =  input("Enter the Flight's terminal: ")
+            flightDate =  input("Enter the Flight's scheduled date, at least 1 day in the future and in format 'YYYY-MM-DD HH:MM:SS': ")
+            flightAirline =  input("Enter the Flight's Airline IATA code: ")
+            flights.add_flight(flightName,flightDestination,flightTerminal,flightDate,flightAirline)
         elif choice == "2":
             update_flight_menu()
         elif choice == "3":
+            flightId = input("Enter the Flight's id: ")
+            destinations.delete_destination(flightId)
             logging.info("Delete a flight.")
-            # Placeholder for updating a flight            
         elif choice == "4":
             flightName = input("Enter the Flight's name: ")
             flightDestination = input("Enter the Flight's destination: ")
@@ -229,19 +235,4 @@ def update_flight_menu():
         else:
             print("Invalid choice. Please try again.")
 
-@util.log_function_call
-def reporting_menu():
-    while True:
-        print("\n=== Reporting Menu ===")
-        print("1. Summary of flights per destination")
-        print("2. Summary of flights per pilot")
-        print("X. Back")
-        
-        choice = input("Enter your choice: ")
-        
-        if choice == "1":
-            pass
-        elif choice.upper() == "X":
-            break
-        else:
-            print("Invalid choice. Please try again.")            
+      

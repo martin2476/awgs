@@ -1,5 +1,5 @@
 '''
-    Contains all functions related to Pilot functionality
+    Contains all functions related to Flights functionality
 '''
 import util
 import logging
@@ -7,8 +7,45 @@ import sqlite3
 import config
 
 from tabulate import tabulate
+from datetime import datetime,timedelta
 from util import log_function_call
 from databaseDAO import DatabaseDAO
+
+@util.log_function_call
+def add_flight(flightName, destinationCode, flightTerminal, flightDate, iataCode):
+    """
+    Does a number of checks and then adds a flight if there are no issues
+
+    Args:
+    - flightName (str): The name of the flight.
+    - destinationCode (str): The destination - needs to exists in the system
+    - flightTerminal: The terminal from where this flight is departing
+    - flightDate (str): The date for this flight. Has to be in the future abd in this format 'YYYY-MM-DD HH:MM:SS'
+    - iataCode: The airline operating this flight - needs to exists in the system.
+    """    
+
+    # validate the date
+    try:
+        # Convert the string into a datetime object
+        date_object = datetime.strptime(flightDate, "%Y-%m-%d %H:%M:%S")
+        if (date_object < (datetime.now() + timedelta(days=1))):
+            print("Date needs to be at least 1 day in the future")
+            return
+    except ValueError:
+        print("Invalid date format. Please ensure your input matches 'YYYY-MM-DD HH:MM:SS'.")
+        return
+    
+    originId = DatabaseDAO.execute(f"SELECT destinationId from Destination WHERE AirportCode = 'LHR'")
+    # Get the destination id
+    destinationId = DatabaseDAO.execute(f"SELECT destinationId from Destination WHERE AirportCode = '{destinationCode.upper()}'")
+    
+    # Get the airline id
+    airlineId = DatabaseDAO.execute(f"SELECT airlineId from Airline WHERE IATACode = '{iataCode.upper()}'")
+
+    DatabaseDAO.add_record(
+    table_name="FlightDetails",
+    column_names=["FlightName", "OriginId","DestinationId", "Terminal","ScheduledFlightDate","AirlineId", "FlightStatus"],
+    values=(flightName,originId[0]['DestinationID'],destinationId[0]['DestinationID'],flightTerminal,flightDate,airlineId[0]['AirlineID'],util.FlightStatus.SCHEDULED.name))
 
 
 @log_function_call

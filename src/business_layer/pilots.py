@@ -10,45 +10,6 @@ from tabulate import tabulate
 from databaseDAO import DatabaseDAO
 
 
-class Pilot:
-    def __init__(self, pilot_id, name, surname, license_number, is_active):
-        """
-        Initialize a Pilot object.
-        
-        Args:
-            pilot_id (int): Unique ID of the pilot.
-            name (str): First name of the pilot.
-            surname (str): Last name of the pilot.
-            license_number (str): License number of the pilot.
-            is_active (bool): Whether the pilot is active (True/False).
-        """
-        self.pilot_id = pilot_id
-        self.name = name
-        self.surname = surname
-        self.license_number = license_number
-        self.is_active = is_active
-
-    def __str__(self):
-        """
-        Return a string representation of the Pilot object.
-        """
-        return f"Pilot(ID: {self.pilot_id}, Name: {self.name} {self.surname}, License: {self.license_number}, Active: {self.is_active})"
-
-    def deactivate(self):
-        """
-        Mark the pilot as inactive.
-        """
-        self.is_active = False
-
-    def activate(self):
-        """
-        Mark the pilot as active.
-        """
-        self.is_active = True
-        
-
-
-
 @util.log_function_call
 def add_pilot(name, surname, licenseNumber):
     column_names=["Name", "Surname", "LicenseNumber","IsActive"]

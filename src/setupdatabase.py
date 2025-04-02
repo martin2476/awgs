@@ -8,7 +8,6 @@ import util
 
 def cleanup_database():
     conn = sqlite3.connect(config.DATABASE_NAME)
-    now = datetime.datetime.now()
     logging.info("Deleting all tables.")
     
     cursor = conn.cursor()
@@ -28,7 +27,6 @@ def cleanup_database():
 
 def setup_database():
     conn = sqlite3.connect(config.DATABASE_NAME)
-    now = datetime.datetime.now()
     logging.info("Creating database.")
     
     cursor = conn.cursor()
@@ -54,7 +52,7 @@ def setup_database():
     cursor.execute("""CREATE TABLE Airline (
                  AirlineID INTEGER PRIMARY KEY,
                  Name TEXT,
-                 IATACode TEXT,
+                 IATACode TEXT UNIQUE,
                  Terminal TEXT,
                  IsActive INTEGER NOT NULL CHECK (IsActive IN (0,1))          -- 1 is active, 0 is not active                   
                  );""")
@@ -99,8 +97,7 @@ def setup_database():
 
 def setup_test_data():
     conn = sqlite3.connect(config.DATABASE_NAME)
-    now = datetime.datetime.now()
-    logging.info("Database {conn.database} has been created.")
+    logging.info(f"Database {config.DATABASE_NAME} has been created.")
     
     cursor = conn.cursor()
 
@@ -125,6 +122,7 @@ def setup_test_data():
         (14, 'Ella', 'Roberts', 'LN46802',util.ActiveStatus.ACTIVE.value),
         (15, 'Lucas', 'Garcia', 'LN57913',util.ActiveStatus.ACTIVE.value)
     ])
+    print("15 sample records added to the Pilots table.")
 
     # Insert sample records into the Plane table
     cursor.executemany("""
@@ -147,6 +145,7 @@ def setup_test_data():
         (14, 'D-GHIJ', 'Dassault', 'Falcon 2000', 'T4680', 19,util.ActiveStatus.ACTIVE.value),
         (15, 'G-KLMN', 'Embraer', 'E175', 'T5791', 88,util.ActiveStatus.ACTIVE.value)
     ])
+    print("15 sample records added to the plane table.")
 
     # Insert sample records into the Destination table
     cursor.executemany("""
@@ -170,6 +169,7 @@ def setup_test_data():
         (15, 'Mexico City International', 'Mexico', 'MEX', 5533,util.ActiveStatus.ACTIVE.value),
         (16, 'Heathrow Airport', 'UK', 'LHR', 0,util.ActiveStatus.ACTIVE.value)
     ])    
+    print("15 sample records added to the destination table.")
 
     # Insert sample records into the Airline table
     cursor.executemany("""
@@ -192,6 +192,7 @@ def setup_test_data():
         (14, 'Aer Lingus', 'EI', '2',util.ActiveStatus.ACTIVE.value),
         (15, 'Swiss International Air Lines', 'LX', '2',util.ActiveStatus.ACTIVE.value)
     ])
+    print("15 sample records added to the airline table.")
 
     # Generate 15 sample records for FlightDetails
     sample_flight_details = []
@@ -208,8 +209,8 @@ def setup_test_data():
         origin_id = 16                    # London Heathrow Airport is the hub and all flights originate from it
         destination_id = random.randint(1, 15)  # Random DestinationID from 1 to 15
 
-        scheduled_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d %H:%M:%S")
-        actual_date = (datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30), hours=random.randint(0, 3))).strftime("%Y-%m-%d %H:%M:%S")
+        scheduled_date = util.format_date(datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30)))
+        actual_date = util.format_date(datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30), hours=random.randint(0, 3)))
         """
         I should calculate the duration based on the destination distance
         """

@@ -10,14 +10,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
     )
     
-# Sample log messages
-# logging.debug("This is a DEBUG message.")
-# logging.info("This is an INFO message.")
-# logging.warning("This is a WARNING message.")
-# logging.error("This is an ERROR message.")
-# logging.critical("This is a CRITICAL message.")
-
-    
 def main():
 
     sd.cleanup_database()
@@ -35,7 +27,6 @@ def main():
         print("3. Airplane Management")
         print("4. Destination Management")
         print("5. Flight Management")
-        print("6. Reporting")
         print("X. Exit")
 
         choice = input("Enter your choice (1-5 || X): ")
@@ -50,8 +41,6 @@ def main():
             menus.destination_management_menu()
         elif choice == "5":
             menus.flight_management_menu()
-        elif choice == "6":
-            menus.reporting_menu()            
         elif choice.upper() == "X":
             print("\nGoodbye!")
             break
