@@ -179,18 +179,25 @@ class DatabaseDAO:
             logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
 
     @log_function_call
-    def execute(query):
+    def execute(query, params=None):
         """
         A generic function
 
         Args:
-        - query (str): the sql query
-        """        
+        - query (str): the SQL query
+        - params (tuple, optional): the parameters for the SQL query
+        """
         try:
             # Use a context manager for safe connection handling
             with sqlite3.connect(config.DATABASE_NAME) as conn:
                 cursor = conn.cursor()
-                cursor.execute(query)
+                
+                # Execute the query with parameters if provided
+                if params:
+                    cursor.execute(query, params)
+                else:
+                    cursor.execute(query)
+                    
                 rows = cursor.fetchall()
                 
                 column_names = [description[0] for description in cursor.description]
@@ -200,16 +207,18 @@ class DatabaseDAO:
                     for row in rows
                 ]
 
-            logging.info(f"execute completed successfully")
+            logging.info("execute completed successfully")
             return result
-        
+
         except sqlite3.Error as e:
             # Log database-specific errors
-            logging.error(f"Database error occurred while executing query.")
-        
+            logging.error(f"Database error occurred while executing query: {e}")
+            raise  # Optionally re-raise the error for debugging
+
         except Exception as e:
             # Handle unexpected errors
-            logging.error(f"Unexpected error occurred while executing query.") 
+            logging.error(f"Unexpected error occurred while executing query: {e}")
+            raise  # Optionally re-raise the error for debugging
             
 
     @log_function_call
@@ -227,13 +236,13 @@ class DatabaseDAO:
                 cursor = conn.cursor()
                 
                 # Construct query with optional criteria
-                query = f"""SELECT FlightDetails.FlightName, Origin.Name, Destination.Name, FlightDetails.ScheduledFlightDate, 
-                            FlightDetails.Terminal, Airline.Name,FlightDetails.FlightStatus 
+                query = f"""SELECT FlightDetails.FlightName, Origin.Name as Origin, Dest.Name as Destination, FlightDetails.ScheduledFlightDate, 
+                            FlightDetails.Terminal, Airline.Name as Airline,FlightDetails.FlightStatus 
                     FROM FlightDetails
                     INNER JOIN Destination As Origin
-                    ON FlightDetails.DestinationID = Origin.DestinationID
-                    INNER JOIN Destination
-                    ON FlightDetails.OriginID = Destination.DestinationID
+                    ON FlightDetails.OriginID = Origin.DestinationID
+                    INNER JOIN Destination as Dest
+                    ON FlightDetails.DestinationID = Dest.DestinationID
                     INNER JOIN Airline
                     ON FlightDetails.AirlineID = Airline.AirlineID           
                     """

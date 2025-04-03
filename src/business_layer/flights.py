@@ -35,34 +35,48 @@ def add_flight(flightName, destinationCode, flightTerminal, flightDate, iataCode
         print("Invalid date format. Please ensure your input matches 'YYYY-MM-DD HH:MM:SS'.")
         return
     
-    originId = DatabaseDAO.execute(f"SELECT destinationId from Destination WHERE AirportCode = 'LHR'")
+    originId = get_destination_id('LHR')
     # Get the destination id
-    destinationId = DatabaseDAO.execute(f"SELECT destinationId from Destination WHERE AirportCode = '{destinationCode.upper()}'")
+    destinationId = get_destination_id(destinationCode.upper())
     
     # Get the airline id
-    airlineId = DatabaseDAO.execute(f"SELECT airlineId from Airline WHERE IATACode = '{iataCode.upper()}'")
+    airlineId = get_airline_id(iataCode.upper())
 
     DatabaseDAO.add_record(
     table_name="FlightDetails",
     column_names=["FlightName", "OriginId","DestinationId", "Terminal","ScheduledFlightDate","AirlineId", "FlightStatus"],
     values=(flightName,originId[0]['DestinationID'],destinationId[0]['DestinationID'],flightTerminal,flightDate,airlineId[0]['AirlineID'],util.FlightStatus.SCHEDULED.name))
 
+@log_function_call
+def get_destination_id(airportCode):
+    query = "SELECT destinationId FROM Destination WHERE AirportCode = ?"
+    return DatabaseDAO.execute(query, (airportCode,))
+
 
 @log_function_call
-def show_flights(flightName=None, flightDestination=None, flightTerminal=None, flightDate=None, flightAirline=None):
-    
+def get_airline_id(iataCode):
+    query = "SELECT airlineId from Airline WHERE IATACode = ?"
+    return DatabaseDAO.execute(query, (iataCode,))
+
+@log_function_call
+def show_flights(flightName=None, destinationCode=None, flightTerminal=None, flightDate=None, iataCode=None):
+
     # Build selection criteria dynamically
     criteria = []
     if flightName:
         criteria.append(f"FlightDetails.FlightName = '{flightName}'")
-    if flightDestination:
-        criteria.append(f"FlightDetails.DestinationID = '{flightDestination}'")
+    if destinationCode:
+        # Get the destination id
+        destinationId = get_destination_id(destinationCode.upper())
+        criteria.append(f"FlightDetails.DestinationID = '{destinationId[0]['DestinationID']}'")
     if flightTerminal:
         criteria.append(f"FlightDetails.Terminal = '{flightTerminal}'")
     if flightDate:
         criteria.append(f"FlightDetails.ScheduledFlightDate = '{flightDate}'")
-    if flightAirline:
-        criteria.append(f"FlightDetails.Airline = '{flightAirline}'")
+    if iataCode:
+        # Get the airline id
+        airlineId = get_airline_id(iataCode.upper())            
+        criteria.append(f"FlightDetails.Airline = '{airlineId[0]['AirlineID']}'")
 
     # Join criteria with AND keyword if any exist
     query_criteria = " AND ".join(criteria) if criteria else None

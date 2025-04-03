@@ -1,20 +1,23 @@
 import logging
 import menus
 import setupdatabase as sd
+import databaseDAO as DatabaseDAO
 import mytest
 
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    level=logging.CRITICAL,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
     format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
     )
-    
+
+
 def main():
 
     sd.cleanup_database()
     sd.setup_database()
     sd.setup_test_data()
+
 
     #mytest.test_add_airplane()
     #mytest.test_amend_airplane()

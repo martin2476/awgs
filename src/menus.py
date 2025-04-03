@@ -163,7 +163,8 @@ def flight_management_menu():
         print("1. Add Flight")
         print("2. Amend Flight")
         print("3. Delete Flight")        
-        print("4. View Flights")        
+        print("4. View Flights") 
+        print("5. View Flights including Pilots") 
         print("X. Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -173,7 +174,7 @@ def flight_management_menu():
             flightName = input("Enter the Flight's name: ")
             flightDestination = input("Enter the Flight's destination Code: ")
             flightTerminal =  input("Enter the Flight's terminal: ")
-            flightDate =  input("Enter the Flight's scheduled date, at least 1 day in the future and in format 'YYYY-MM-DD HH:MM:SS': ")
+            flightDate =  input("Enter the Flight's scheduled date, at least 1 day in the future ()'YYYY-MM-DD HH:MM:SS'): ")
             flightAirline =  input("Enter the Flight's Airline IATA code: ")
             flights.add_flight(flightName,flightDestination,flightTerminal,flightDate,flightAirline)
         elif choice == "2":
@@ -184,10 +185,10 @@ def flight_management_menu():
             logging.info("Delete a flight.")
         elif choice == "4":
             flightName = input("Enter the Flight's name: ")
-            flightDestination = input("Enter the Flight's destination: ")
+            flightDestination = input("Enter the Flight's destination Code: ")
             flightTerminal =  input("Enter the Flight's terminal: ")
-            flightDate =  input("Enter the Flight's date: ")
-            flightAirline =  input("Enter the Flight's Airline: ")
+            flightDate =  input("Enter the Flight's date ('YYYY-MM-DD HH:MM:SS'): ")
+            flightAirline =  input("Enter the Flight's Airline IATA code: ")
             flights.show_flights(flightName,flightDestination,flightTerminal,flightDate,flightAirline)
         elif choice.upper() == "X":
             break
