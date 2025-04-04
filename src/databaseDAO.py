@@ -207,19 +207,15 @@ class DatabaseDAO:
                     for row in rows
                 ]
 
-            logging.info("execute completed successfully")
             return result
 
         except sqlite3.Error as e:
             # Log database-specific errors
             logging.error(f"Database error occurred while executing query: {e}")
-            raise  # Optionally re-raise the error for debugging
 
         except Exception as e:
             # Handle unexpected errors
             logging.error(f"Unexpected error occurred while executing query: {e}")
-            raise  # Optionally re-raise the error for debugging
-            
 
     @log_function_call
     def get_flights_records(table_name, criteria=None):    
@@ -236,15 +232,26 @@ class DatabaseDAO:
                 cursor = conn.cursor()
                 
                 # Construct query with optional criteria
-                query = f"""SELECT FlightDetails.FlightID,FlightDetails.FlightName, Origin.Name as Origin, Dest.Name as Destination, FlightDetails.ScheduledFlightDate, 
-                            FlightDetails.Terminal, Airline.Name as Airline,FlightDetails.FlightStatus 
-                    FROM FlightDetails
-                    INNER JOIN Destination As Origin
-                    ON FlightDetails.OriginID = Origin.DestinationID
-                    INNER JOIN Destination as Dest
-                    ON FlightDetails.DestinationID = Dest.DestinationID
-                    INNER JOIN Airline
-                    ON FlightDetails.AirlineID = Airline.AirlineID           
+                query = f"""SELECT 
+                            FlightDetails.FlightID,
+                            FlightDetails.FlightName,
+                            Origin.Name AS Origin,
+                            Dest.Name AS Destination,
+                            FlightDetails.ScheduledFlightDate,
+                            COALESCE(FlightDetails.Terminal, Airline.Terminal) AS Terminal, -- Use Airline.Terminal if FlightDetails.Terminal is empty
+                            Airline.Name AS Airline,
+                            FlightDetails.FlightStatus
+                        FROM 
+                            FlightDetails
+                        INNER JOIN 
+                            Destination AS Origin
+                            ON FlightDetails.OriginID = Origin.DestinationID
+                        INNER JOIN 
+                            Destination AS Dest
+                            ON FlightDetails.DestinationID = Dest.DestinationID
+                        INNER JOIN 
+                            Airline
+                            ON FlightDetails.AirlineID = Airline.AirlineID;
                     """
                 
                 if criteria:
@@ -272,10 +279,10 @@ class DatabaseDAO:
     @log_function_call
     def get_all_pilots_for_flight(flightID):    
         """
-        A specific function to fetch flight records with optional selection criteria.
+        A specific function to fetch pilot records for a particular flight.
 
         Args:
-        - flightID
+        - flightID (INTEGER): flight's id
         """
         try:
             # Use a context manager for safe connection handling
@@ -330,7 +337,8 @@ class DatabaseDAO:
                 # Dynamically construct the query
                 # Construct query with optional criteria
                 query = f"""SELECT FlightDetails.FlightName, Origin.Name, Destination.Name, FlightDetails.ScheduledFlightDate, 
-                            FlightDetails.Terminal, Airline.Name,FlightDetails.FlightStatus 
+                            COALESCE(FlightDetails.Terminal, Airline.Terminal) AS Terminal, -- Use Airline.Terminal if FlightDetails.Terminal is empty,
+                            Airline.Name,FlightDetails.FlightStatus 
                     FROM FlightPilots
                     INNER JOIN FlightDetails
                     ON FlightPilots.FlightID = FlightDetails.FlightID
