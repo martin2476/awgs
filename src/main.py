@@ -7,7 +7,7 @@ import mytest
 
 # Configure logging
 logging.basicConfig(
-    level=logging.CRITICAL,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    level=logging.DEBUG,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
     format="%(asctime)s - %(levelname)s - %(message)s"  # Customize log message format
     )
 

@@ -190,6 +190,13 @@ def flight_management_menu():
             flightDate =  input("Enter the Flight's date ('YYYY-MM-DD HH:MM:SS'): ")
             flightAirline =  input("Enter the Flight's Airline IATA code: ")
             flights.show_flights(flightName,flightDestination,flightTerminal,flightDate,flightAirline)
+        elif choice == "5":
+            flightName = input("Enter the Flight's name: ")
+            flightDestination = input("Enter the Flight's destination Code: ")
+            flightTerminal =  input("Enter the Flight's terminal: ")
+            flightDate =  input("Enter the Flight's date ('YYYY-MM-DD HH:MM:SS'): ")
+            flightAirline =  input("Enter the Flight's Airline IATA code: ")
+            flights.show_flights_including_pilots(flightName,flightDestination,flightTerminal,flightDate,flightAirline)
         elif choice.upper() == "X":
             break
         else:

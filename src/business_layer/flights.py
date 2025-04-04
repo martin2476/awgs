@@ -52,7 +52,6 @@ def get_destination_id(airportCode):
     query = "SELECT destinationId FROM Destination WHERE AirportCode = ?"
     return DatabaseDAO.execute(query, (airportCode,))
 
-
 @log_function_call
 def get_airline_id(iataCode):
     query = "SELECT airlineId from Airline WHERE IATACode = ?"
@@ -84,6 +83,40 @@ def show_flights(flightName=None, destinationCode=None, flightTerminal=None, fli
     # Fetch records with optional criteria
     data = DatabaseDAO.get_flights_records("FlightDetails", query_criteria)
     print(tabulate(data, headers="keys", tablefmt="grid"))
+
+
+@log_function_call
+def show_flights_including_pilots(flightName=None, destinationCode=None, flightTerminal=None, flightDate=None, iataCode=None):
+
+    # Build selection criteria dynamically
+    criteria = []
+    if flightName:
+        criteria.append(f"FlightDetails.FlightName = '{flightName}'")
+    if destinationCode:
+        # Get the destination id
+        destinationId = get_destination_id(destinationCode.upper())
+        criteria.append(f"FlightDetails.DestinationID = '{destinationId[0]['DestinationID']}'")
+    if flightTerminal:
+        criteria.append(f"FlightDetails.Terminal = '{flightTerminal}'")
+    if flightDate:
+        criteria.append(f"FlightDetails.ScheduledFlightDate = '{flightDate}'")
+    if iataCode:
+        # Get the airline id
+        airlineId = get_airline_id(iataCode.upper())            
+        criteria.append(f"FlightDetails.Airline = '{airlineId[0]['AirlineID']}'")
+
+    # Join criteria with AND keyword if any exist
+    query_criteria = " AND ".join(criteria) if criteria else None
+    
+    # Fetch records with optional criteria
+    flight_records = DatabaseDAO.get_flights_records("FlightDetails", query_criteria)
+
+    # Loop through each record in the return list and get the list of Pilots
+    for record in flight_records:
+        flight_id = record.get("FlightID")
+        all_pilots= DatabaseDAO.get_all_pilots_for_flight(flight_id)
+        print(tabulate([record], headers="keys", tablefmt="grid"))
+        print(tabulate(all_pilots, headers="keys", tablefmt="grid"))
 
 @log_function_call
 def update_flight_status(flightId,status):

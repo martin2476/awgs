@@ -236,7 +236,7 @@ class DatabaseDAO:
                 cursor = conn.cursor()
                 
                 # Construct query with optional criteria
-                query = f"""SELECT FlightDetails.FlightName, Origin.Name as Origin, Dest.Name as Destination, FlightDetails.ScheduledFlightDate, 
+                query = f"""SELECT FlightDetails.FlightID,FlightDetails.FlightName, Origin.Name as Origin, Dest.Name as Destination, FlightDetails.ScheduledFlightDate, 
                             FlightDetails.Terminal, Airline.Name as Airline,FlightDetails.FlightStatus 
                     FROM FlightDetails
                     INNER JOIN Destination As Origin
@@ -268,6 +268,51 @@ class DatabaseDAO:
         except Exception as e:
             # Handle unexpected errors
             logging.error(f"Unexpected error occurred while fetching records from {table_name}: {e}")
+
+    @log_function_call
+    def get_all_pilots_for_flight(flightID):    
+        """
+        A specific function to fetch flight records with optional selection criteria.
+
+        Args:
+        - flightID
+        """
+        try:
+            # Use a context manager for safe connection handling
+            with sqlite3.connect(config.DATABASE_NAME) as conn:
+                cursor = conn.cursor()
+                
+                # Query to get all the pilots linked to a flight
+                query = f"""SELECT 
+                            Pilot.Name, 
+                            Pilot.Surname
+                        FROM 
+                            FlightDetails
+                        INNER JOIN 
+                            FlightPilots ON FlightDetails.FlightID = FlightPilots.FlightID
+                        INNER JOIN 
+                            Pilot ON FlightPilots.PilotID = Pilot.PilotID
+                        WHERE 
+                            FlightDetails.FlightID = ?;
+                    """
+                cursor.execute(query,(int(flightID),))
+                rows = cursor.fetchall()
+                column_names = [description[0] for description in cursor.description]
+                
+                result = [
+                    {column_names[index]: value for index, value in enumerate(row)}
+                    for row in rows
+                ]
+                
+            return result
+
+        except sqlite3.Error as e:
+            # Log database-specific errors
+            logging.error(f"Database error occurred while fetching records from FlightDetails: {e}")
+        
+        except Exception as e:
+            # Handle unexpected errors
+            logging.error(f"Unexpected error occurred while fetching records from FlightDetails: {e}")
 
     @log_function_call
     def get_pilot_schedule(pilotId):
