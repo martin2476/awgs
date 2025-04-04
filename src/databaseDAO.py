@@ -14,7 +14,7 @@ class DatabaseDAO:
         - column_names (list): List of column names for the insertion.
         - values (tuple): Tuple of values corresponding to the columns.
 
-        Returm:
+        Return:
         - True if no errors otherwise false
         """
         return_value = False
